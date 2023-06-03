@@ -1,0 +1,93 @@
+section {
+    background-color: #f1f1f1;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.accountIntro {
+    width: 485px;
+    height: 100%;
+    padding: 100px 50px;
+    box-sizing: border-box;
+    background-color: #150E70;
+    color: #fff;
+    text-align: center;
+}
+
+.accountIntro .logo {
+    margin-bottom: 20px;
+}
+
+.accountIntro .siteName {
+    display: block;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.accountIntro p {
+    font-size: 14px;
+}
+
+.accountIntro p.grey {
+    color: #A7A7A7;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+/* 로그인 */
+.accountForm {
+    width: calc(100% - 485px);
+    padding: 50px;
+    box-sizing: border-box;
+}
+
+.accountForm h2.title {
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 50px;
+}
+
+.accountForm .goJoin {
+    text-align: center;
+}
+
+.accountForm .goJoin a {
+    color:#5F30E2;
+    margin-left: 10px;
+    display: inline-block;
+    position: relative;
+}
+.accountForm .goJoin a:after {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #5F30E2;
+}
+
+/* 회원가입 프로필 이미지 선택 (나중에 사이즈 수정 필요) */
+.profileSelect {
+    display: flex;
+}
+
+.profileSelect .mainImage {
+    width: 140px;
+    margin-right: 10px;
+}
+
+.profileSelect .mainImage img {
+    width: 100%;
+}
+
+.profileSelect .thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    width: 108px;
+}
+.profileSelect .thumbnails img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
