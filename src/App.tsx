@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
 
 import "./styles/App.css";
-import DatePickerBox from "./components/common/DatePickerBox/DatePickerBox";
 
 import LoginPage from "./pages/login";
 import JoinPage from "./pages/join";
