@@ -4,8 +4,8 @@ import { format, getMonth, getYear } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 
-import styles from "../../../styles/DatePickerBox.module.scss"
-import "../../../styles/DatePickerBox.scss"
+import styles from "../../../styles/DatePickerBox.module.scss";
+import "../../../styles/DatePickerBox.scss";
 import CalendarIcon from "./CalendarIcon";
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
   value?: string;
   onClick?: () => void;
   purpose: string;
+  handeleSelect?: any;
 }
 
 const getDayOfWeek = (date: any) => {
@@ -30,7 +31,7 @@ const getDayOfWeek = (date: any) => {
   return dayOfWeek;
 };
 
-const DatePickerBox:React.FC<Props> = ({purpose}) => {
+const DatePickerBox: React.FC<Props> = ({ purpose, handeleSelect }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const YEARS = Array.from(
@@ -52,16 +53,29 @@ const DatePickerBox:React.FC<Props> = ({purpose}) => {
     "December",
   ];
 
+  const CustomInput: React.FC<Props> = forwardRef(
+    ({ value, onClick, purpose }, ref) =>
+      purpose === "main" ? (
+        <MainInput onClick={onClick}>{value}</MainInput>
+      ) : (
+        <ScheduleInput onClick={onClick}>
+          <CalendarIcon />
+          {value}
+        </ScheduleInput>
+      )
+  );
 
-  const CustomInput: React.FC<Props> = forwardRef(({ value, onClick, purpose }, ref) => (
-    purpose === "main" ? <MainInput onClick={onClick}>{value}</MainInput> : <ScheduleInput onClick={onClick}><CalendarIcon/>{value}</ScheduleInput>
-  ));
+  // @ts-expect-error
+  handeleSelect(format(selectedDate, "yyyy.MM.dd"));
 
   return (
     <DatePicker
-    customInput={<CustomInput purpose={purpose}/>}
-    dateFormat={
-      purpose === "main" ? `yyyy.MM.dd (${getDayOfWeek(selectedDate)})`: 'yyyy.MM' }
+      customInput={<CustomInput purpose={purpose} />}
+      dateFormat={
+        purpose === "main"
+          ? `yyyy.MM.dd (${getDayOfWeek(selectedDate)})`
+          : "yyyy.MM"
+      }
       selected={selectedDate}
       onChange={(date) => setSelectedDate(date)}
       minDate={new Date("2000-01-01")}
@@ -110,34 +124,34 @@ const DatePickerBox:React.FC<Props> = ({purpose}) => {
 };
 
 const MainInput = styled.button`
--webkit-appearance: none;
--moz-appearance: none;
-appearance: none;
-outline-style: none;
-border: none;
-color: transparent;
-text-shadow: 0 0 0 black;
-background-color:white;
-cursor: pointer;
-width: 140px;
-font-size: 16px;
-margin: 5px;
-`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline-style: none;
+  border: none;
+  color: transparent;
+  text-shadow: 0 0 0 black;
+  background-color: white;
+  cursor: pointer;
+  width: 140px;
+  font-size: 16px;
+  margin: 5px;
+`;
 const ScheduleInput = styled.button`
-display:flex;
-justify-content: space-around;
--webkit-appearance: none;
--moz-appearance: none;
-appearance: none;
-outline-style: none;
-border: none;
-color: transparent;
-text-shadow: 0 0 0 black;
-background-color:white;
-cursor: pointer;
-width: 210px;
-font-size: 40px;
-margin: 5px;
-`
+  display: flex;
+  justify-content: space-around;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline-style: none;
+  border: none;
+  color: transparent;
+  text-shadow: 0 0 0 black;
+  background-color: white;
+  cursor: pointer;
+  width: 210px;
+  font-size: 40px;
+  margin: 5px;
+`;
 
 export default DatePickerBox;
