@@ -3,24 +3,40 @@ import styled, { css } from "styled-components";
 
 interface ButtonProps {
   disabled: boolean;
-  purpose: "base" | "login";
+  purpose: "base" | "reportPost" | "reportComment";
   content: string;
+  onClick?: () => void;
 }
 
 const PURPOSE_STYLES = {
-  base: css`
-    --button-padding: 12px 16px;
+  base: css``,
+
+  reportPost: css`
+    --button-bgcolor: #f54336;
+    --button-bgcolor-hover: #f87b72;
   `,
-  login: css`
-    --button-width: 100%;
+  reportComment: css`
+    --button-bgcolor: none;
+    --button-bgcolor-hover: none;
+    --button-color: black;
+    --button-text-deco: underline;
   `,
 };
 
-const Button: React.FC<ButtonProps> = ({ disabled, purpose, content }) => {
+const Button: React.FC<ButtonProps> = ({
+  disabled,
+  purpose,
+  content,
+  onClick,
+}) => {
   const purposeStyle = PURPOSE_STYLES[purpose];
 
   return (
-    <StyledButton disabled={disabled} purposeStyle={purposeStyle}>
+    <StyledButton
+      disabled={disabled}
+      purposeStyle={purposeStyle}
+      onClick={onClick}
+    >
       {content}
     </StyledButton>
   );
@@ -32,19 +48,21 @@ const StyledButton = styled.button<{ purposeStyle?: ReturnType<typeof css> }>`
   ${(p) => p.purposeStyle}
 
   margin: 0;
-  border: none;
   cursor: pointer;
   font-family: "Noto Sans KR", sans-serif;
   font-size: 14px;
   padding: 12px 16px;
+  border: none;
   border-radius: 8px;
-  width: var(--button-width);
-  background: #5f30e2;
-  color: #ffffff;
+  width: 100%;
+  height: 100%;
+  background: var(--button-bgcolor, #5f30e2);
+  color: var(--button-color, #ffffff);
+  text-decoration: var(--button-text-deco, none);
 
   &:active,
   &:hover {
-    background: #8f6eeb;
+    background: var(--button-bgcolor-hover, #8f6eeb);
   }
 
   &:disabled {
