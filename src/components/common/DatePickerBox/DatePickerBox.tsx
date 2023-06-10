@@ -123,8 +123,8 @@ const MainInput = styled.button`
   text-shadow: 0 0 0 black;
   background-color: white;
   cursor: pointer;
-  width: 140px;
-  font-size: 16px;
+  width: 160px;
+  font-size: 20px;
   margin: 5px;
 `;
 const ScheduleInput = styled.button`

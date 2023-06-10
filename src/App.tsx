@@ -11,6 +11,7 @@ import KlRecord from "./components/Record/KlRecord";
 import KboRecord from "./components/Record/KboRecord";
 import LoLRecord from "./components/Record/LoLRecord";
 import MyWrite from "./pages/mypage/myWrite";
+import MainPage from "./pages/Main/MainPage";
 import Shorts from "./pages/shorts/shorts";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Router>
         <Header></Header>
         <Routes>
+          <Route path="/" element={<MainPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/join" element={<JoinPage />}></Route>
           <Route path="/register" element={<JoinPage />}></Route>
