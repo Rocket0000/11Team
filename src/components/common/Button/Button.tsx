@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-interface ButtonProps {
+export interface ButtonProps {
   disabled: boolean;
   purpose: "base" | "reportPost" | "reportComment";
   content: string;

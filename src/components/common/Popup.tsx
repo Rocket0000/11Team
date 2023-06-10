@@ -1,32 +1,48 @@
 import React from "react";
+import Button,{ ButtonProps } from "./Button/Button";
 import styled from "styled-components";
-import Button from "./Button/Button";
-//import Button,{ ButtonProps } from "./Button";//버튼에 잇는 인터페이스 가져와야해서 export 필요함 *찬규님 확인*
 
-interface PopupProps {
-  title: string;
-  count: 1 | 2;
+interface PopupProps extends ButtonProps {
+  title : string;
+  count : 1 | 2 ;
+  clickHandler : () => void;
+  cancelEvent? : () => void; 
 }
 
-const Popup: React.FC<PopupProps> = ({ title, count }) => {
-  return (
+const Popup: React.FC<PopupProps> = ({title, count, disabled, purpose, content, clickHandler, cancelEvent}) => {
+
+  const text = content.split(',');
+
+  return(
     <Bg>
       <StyledPopup>
         <h2>{title}</h2>
         <ButtonBox btnCount={count}>
           {
-            count === 2 ? (
-              <>
-                <button></button>
-                <button></button>
-              </>
-            ) : (
-              <button></button>
-            )
-            //버튼 컴포넌트 받아와야함 지금 인터페이스를 받아올수 없어서 button태그로 대체함 이렇게 진행할 예정
+            count === 2 ?
+            <>
+              <Button 
+                disabled={disabled} 
+                purpose="base" 
+                content={text[0]}
+                onClick={clickHandler}
+              />
+              <Button 
+                disabled={disabled} 
+                purpose="reportComment" 
+                content={text[1]} 
+                onClick={cancelEvent}
+              />
+            </>
+            :
+            <Button 
+              disabled={disabled} 
+              purpose={purpose} 
+              content={content} 
+              onClick={clickHandler}
+            />
           }
         </ButtonBox>
-        {/*버튼 인터페이스 받아와야해서 작업 중지 */}
       </StyledPopup>
     </Bg>
   );
@@ -49,8 +65,8 @@ const Bg = styled.div`
 `;
 
 const StyledPopup = styled.div`
-  width: 345px;
-  padding: 50px 0 14px;
+  width: 245px;
+  padding: 20px;
 
   background: #fff;
   border-radius: 12px;
@@ -58,10 +74,11 @@ const StyledPopup = styled.div`
 
   h2 {
     width: 224px;
-    margin: 30px;
+    margin: 30px auto;
     font-family: "Noto Sans KR", sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     word-break: keep-all;
+    text-align: center;
   }
 `;
 
