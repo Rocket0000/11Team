@@ -4,7 +4,7 @@ import axios, { all } from "axios";
 
 import styles from "../../styles/main.module.scss";
 import rankData from "./Dummy/rankData.json";
-import teamData from "../../pages/Record/teamData.json";
+import teamData from "./Dummy/teamData.json";
 import category from "./Dummy/category.json";
 
 interface Team {
@@ -82,6 +82,7 @@ const RankBox = () => {
   useEffect(() => {
     setTargetCatrgory(category[0]);
     const targetData = getTeamsWithWinRate(targetCatrgory);
+    // @ts-expect-error
     setData(targetData);
 
     // getRankData(0);
@@ -91,6 +92,7 @@ const RankBox = () => {
   useEffect(() => {
     const targetData = getTeamsWithWinRate(targetCatrgory);
     const newData = [...targetData];
+    // @ts-expect-error
     setData(newData);
 
     //const targetData = getRankData(targetCatrgory)
