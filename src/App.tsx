@@ -1,5 +1,10 @@
-import React from "react";
-import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  Routes,
+  BrowserRouter as Router,
+  Route,
+  useActionData,
+} from "react-router-dom";
 
 import "./styles/App.css";
 import Header from "./components/common/Header/Header";
