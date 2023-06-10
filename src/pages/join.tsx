@@ -1,62 +1,55 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import { AccountBox, AccountIntro } from "./login";
 import "./../styles/login.css";
 
 import Button from "./../components/common/Button/Button";
 import Input from "./../components/common/Input";
+import Header from "./../components/common/Header/Header";
 import userData from "./userData"; //임시데이터
 
 const JoinPage: React.FC = () => {
+  //나중에 하나로 정리하기
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [favorite, setFavorite] = useState("");
+  const [interest, setInterest] = useState("");
   const [nickname, setNickname] = useState("");
   const [phone, setPhone] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [avatarId, setAvatarId] = useState(1); // 선택된 아바타의 ID
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleEmailChange = (e: any) => {
-    const enteredEmail = e;
-    setEmail(enteredEmail);
-
-    // 이메일 형식을 확인하는 정규식. 영어만 가능
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    if (!emailRegex.test(enteredEmail)) {
-      setErrorMessage("올바른 이메일을 입력해주세요.");
-    } else {
-      setErrorMessage("");
-    }
-  };
-
-  const handlePasswordChange = (e: any) => {
-    setPassword(e);
-    setErrorMessage("");
-  };
-
-  const handleConfirmPasswordChange = (e: any) => {
-    setConfirmPassword(e);
-    setErrorMessage("");
-  };
-
-  const handleNicknameChange = (e: any) => {
-    setNickname(e);
-  };
-
-  const handlePhoneChange = (e: any) => {
-    setPhone(e);
-  };
-
-  const handleAvatarChange = (selectedImage: Image) => {
-    setAvatar(selectedImage.fullImageUrl);
-  };
-
-  const handleFavoriteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value || "0";
-    setFavorite(selectedValue);
+  // 회원가입 요청을 보내는 함수
+  // 문서좀 제대로 읽기
+  const registerUser = () => {
+    axios
+      .post("http://localhost:5500/api/v1/auth/register", {
+        email,
+        password,
+        interest,
+        nickname,
+        phone,
+        img: avatarId,
+        role: 0,
+      })
+      .then((response) => {
+        console.log("회원가입 성공");
+        alert("회원가입이 완료되었습니다. 환영합니다!");
+        console.log("이메일:", email);
+        console.log("비밀번호:", password);
+        console.log("선호종목:", interest);
+        console.log("닉네임:", nickname);
+        console.log("핸드폰:", phone);
+        console.log("아바타 ID:", avatarId);
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error("회원가입 실패:", error);
+        alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+      });
   };
 
   const handleRegister = () => {
@@ -78,140 +71,108 @@ const JoinPage: React.FC = () => {
       email === "" ||
       password === "" ||
       confirmPassword === "" ||
-      favorite === "" ||
+      interest === "" ||
       nickname === "" ||
-      phone === "" ||
-      avatar === ""
+      phone === ""
     ) {
       alert("모든 필수 정보를 입력해주세요.");
       return;
     }
 
-    // 회원가입 성공
-    console.log("회원가입 성공");
-    alert("회원가입이 완료되었습니다. 환영합니다!");
-    console.log("이메일:", email);
-    console.log("비밀번호:", password);
-    console.log("선호종목:", favorite);
-    console.log("닉네임:", nickname);
-    console.log("핸드폰:", phone);
-    console.log("프로필 아바타:", avatar);
-
-    // 기존 회원 정보를 불러옴
-    const existingUsers = localStorage.getItem("users");
-    const parsedExistingUsers = existingUsers ? JSON.parse(existingUsers) : [];
-    // 새로운 회원 정보를 추가
-    const user = {
-      email,
-      password,
-      favorite,
-      nickname,
-      phone,
-      avatar,
-    };
-    const updatedUsers = [...parsedExistingUsers, user];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    // // 회원가입 정보를 로컬 스토리지에 저장(덮어쓰기 저장)
-    // const user = {
-    //   email,
-    //   password,
-    //   favorite,
-    //   nickname,
-    //   phone,
-    //   avatar,
-    // };
-    // localStorage.setItem("user", JSON.stringify(user));
-  
-    navigate("/login");
+    // 회원가입 요청 보내기
+    registerUser();
   };
 
   return (
-    <section>
-      <AccountBox login="join">
-        <AccountIntro />
-        <div className="accountForm">
-          <h2 className="title">회원가입</h2>
-          <StyledArticle>
-            <ul>
-              <li>
-                {/* 이메일 입력 */}
-                <p className="inputField">이메일</p>
-                <Input type="email" value={email} onChange={handleEmailChange} />
-                {/* <input
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                /> */}
-                {errorMessage && errorMessage.includes("이메일") && (
-                  <ErrorMessage>{errorMessage}</ErrorMessage>
-                )}
-              </li>
-              <li>
-                {/* 비밀번호 입력 */}
-                <p className="inputField">비밀번호</p>
-                 <Input type="password" value={password} onChange={handlePasswordChange} />
-                {/* <input
-                  type="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                /> */}
-              </li>
-              {/* 비밀번호 확인 입력 */}
-              <li>
-                <p className="inputField">비밀번호 확인</p>
-                <Input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
-                {/* <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} /> */}
-                {errorMessage && errorMessage.includes("비밀번호") && (
-                  <ErrorMessage>{errorMessage}</ErrorMessage>
-                )}
-              </li>
-              <li>
-                {/* 선호종목 입력 */}
-                <p className="inputField">선호종목</p>
-                <select value={favorite} onChange={handleFavoriteChange}>
-                  <option value="">선호 종목을 선택하세요</option>
-                  <option value="0">축구</option>
-                  <option value="1">야구</option>
-                  <option value="2">롤</option>
-                </select>
-              </li>
-            </ul>
-            <ul>
-              <li>
-                {/* 닉네임 입력 */}
-                <p className="inputField">닉네임</p>
-                <Input type="text" value={nickname} onChange={handleNicknameChange}/>
-                {/* <input type="text" value={nickname} onChange={handleNicknameChange} /> */}
-              </li>
-              <li>
-                {/* 핸드폰 입력 */}
-                <p className="inputField">핸드폰</p>
-                <Input type="text" value={phone} onChange={handlePhoneChange} /> 
-                {/* <input type="text" value={phone} onChange={handlePhoneChange} /> */}
-              </li>
-              <li>
-                {/* 프로필 아바타 입력 */}
-                <p className="inputField">프로필아바타</p>
-                <Gallery onAvatarChange={handleAvatarChange} />
-              </li>
-            </ul>
-          </StyledArticle>
-          <Button
-            disabled={false}
-            purpose="base"
-            content="회원가입"
-            onClick={handleRegister}
-          />
-          <p className="goJoin">
-            이미 회원이세요? <Link to="/login">로그인</Link>
-          </p>
-        </div>
-      </AccountBox>
-    </section>
+    <>
+      <Header />
+      <section>
+        <AccountBox login="join">
+          <AccountIntro />
+          <div className="accountForm">
+            <h2 className="title">회원가입</h2>
+            <StyledArticle>
+              <ul>
+                <li>
+                  {/* 이메일 입력 */}
+                  <p className="inputField">이메일</p>
+                  <Input type="email" value={email} onChange={setEmail} />
+                  {errorMessage && errorMessage.includes("이메일") && (
+                    <ErrorMessage>{errorMessage}</ErrorMessage>
+                  )}
+                </li>
+                <li>
+                  {/* 비밀번호 입력 */}
+                  <p className="inputField">비밀번호</p>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                  />
+                </li>
+                {/* 비밀번호 확인 입력 */}
+                <li>
+                  <p className="inputField">비밀번호 확인</p>
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                  />
+                  {errorMessage && errorMessage.includes("비밀번호") && (
+                    <ErrorMessage>{errorMessage}</ErrorMessage>
+                  )}
+                </li>
+                <li>
+                  {/* 선호종목 입력 */}
+                  <p className="inputField">선호종목</p>
+                  <select
+                    value={interest}
+                    onChange={(e) => setInterest(e.target.value)}
+                  >
+                    <option value="">선호 종목을 선택하세요</option>
+                    <option value="0">축구</option>
+                    <option value="1">야구</option>
+                    <option value="2">롤</option>
+                  </select>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  {/* 닉네임 입력 */}
+                  <p className="inputField">닉네임</p>
+                  <Input type="text" value={nickname} onChange={setNickname} />
+                </li>
+                <li>
+                  {/* 핸드폰 입력 */}
+                  <p className="inputField">핸드폰</p>
+                  <Input type="text" value={phone} onChange={setPhone} />
+                </li>
+                <li>
+                  {/* 프로필 아바타 입력 */}
+                  <p className="inputField">프로필아바타</p>
+                  <Gallery
+                    onAvatarChange={(selectedImage: Image) =>
+                      setAvatarId(selectedImage.id)
+                    }
+                  />
+                </li>
+              </ul>
+            </StyledArticle>
+            <Button
+              disabled={false}
+              purpose="base"
+              content="회원가입"
+              onClick={handleRegister}
+            />
+            <p className="goJoin">
+              이미 회원이세요? <Link to="/login">로그인</Link>
+            </p>
+          </div>
+        </AccountBox>
+      </section>
+    </>
   );
 };
-
 //입력폼 스타일드 컴포넌트
 const StyledArticle = styled.article`
   display: flex;
@@ -275,7 +236,6 @@ interface Image {
 interface GalleryProps {
   onAvatarChange: (selectedImage: Image) => void;
 }
-
 const Gallery: React.FC<GalleryProps> = ({ onAvatarChange }) => {
   const thumbnailImages: Image[] = [
     {
