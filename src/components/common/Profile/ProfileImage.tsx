@@ -11,7 +11,7 @@ interface ProfileImageProps {
 }
 
 const IMG_SIZE = {
-  header: 60,
+  header: 40,
   comment: 36,
   mypage: 150,
 };
