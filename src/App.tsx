@@ -6,6 +6,7 @@ import Header from "./components/common/Header/Header";
 import Footer from "./components/common/Footer";
 import LoginPage from "./pages/login";
 import JoinPage from "./pages/join";
+import SchedulePage from "./pages/SchedulePage";
 import KlRecord from "./components/Record/KlRecord";
 import KboRecord from "./components/Record/KboRecord";
 import LoLRecord from "./components/Record/LoLRecord";
@@ -26,6 +27,7 @@ function App() {
             <Route path="myPicture" element={<p>동영상 목록</p>} />
             <Route path="myInfo" element={<p>내정보</p>} />
           </Route>
+          <Route path="/:sports/schedule" element={<SchedulePage />}></Route>
           <Route path="/soccer"></Route>
           <Route path="/soccer/record" element={<KlRecord />} />
           <Route path="/baseball"></Route>

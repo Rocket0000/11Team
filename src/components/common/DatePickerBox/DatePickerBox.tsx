@@ -4,13 +4,14 @@ import { format, getMonth, getYear } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 
+import { getDayOfWeek } from "../../../utils/date";
 import styles from "../../../styles/DatePickerBox.module.scss";
 import "../../../styles/DatePickerBox.scss";
 import CalendarIcon from "./CalendarIcon";
 
 interface Props {
-  selectedDate: Date | null;
-  setSelectedDate: Dispatch<SetStateAction<Date | null>>;
+  selectedDate: Date;
+  setSelectedDate: Dispatch<SetStateAction<Date>>;
   value?: string;
   onClick?: () => void;
   purpose: "main" | "schedule";
@@ -21,20 +22,6 @@ interface CustomInputProps {
   onClick?: () => void;
   purpose: string;
 }
-
-const getDayOfWeek = (date: any) => {
-  const WEEKS: ReadonlyArray<string> = [
-    "일",
-    "월",
-    "화",
-    "수",
-    "목",
-    "금",
-    "토",
-  ];
-  const dayOfWeek = WEEKS[new Date(date).getDay()];
-  return dayOfWeek;
-};
 
 const MONTHS: ReadonlyArray<string> = [
   "January",
