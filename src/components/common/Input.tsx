@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-interface InputStyledProps {
+export interface InputStyledProps {
   type?: string;
   value: string;
   onChange: (value: string) => void;
