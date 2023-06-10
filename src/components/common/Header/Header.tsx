@@ -37,12 +37,15 @@ export default Header
 
 const HeaderContainer = styled.div`
     position: relative;
-    padding-bottom: 30px;
 `
 
 const HeaderTop = styled.div`
     width: 100vw;
-    height: 80px;
+    height: 60px;
+
+    @media (max-width: 768px) {
+        height: 45px;
+    }
 `
 
 const HeaderWrap = styled.div`
@@ -52,6 +55,10 @@ const HeaderWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: 768px) {
+        padding: 0 15px;
+    }
 `
 
 const Button = styled.button`
@@ -59,6 +66,11 @@ const Button = styled.button`
     margin-left: 20px;
     cursor: pointer;
     padding: 5px 10px;
+    font-size: 16px;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `
 
 const Logo = styled.div`
@@ -68,14 +80,19 @@ const Logo = styled.div`
 `
 
 const LogoImg = styled.img`
-    width: 40px;
+    width: 25px;
     height: auto;
+    @media (max-width: 768px) {
+        width: 20px;
+    }
 `
 
 const LogoText = styled.span`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   padding-left: 5px;
+
+  
 `;
 
 const NavLink = styled(Link)`

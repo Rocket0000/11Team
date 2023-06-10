@@ -16,9 +16,10 @@ const Navbar = () => {
         const pathArray = location.pathname.split('/');
         const category = pathArray.length > 1 ? `/${pathArray[1]}` : '';
 
-        // 코드 리뷰 반영. location.pathname이 빈 문자열인지도 확인하기
+        // 아래 카테고리만 허용
+        const categories = ['/soccer', '/baseball', '/esport'];
         setSubNav({
-            show: location.pathname !== '' && location.pathname !== '/',
+            show: location.pathname !== '' && location.pathname !== '/' && categories.includes(category),
             category,
         });
     }, [location.pathname]);
@@ -65,11 +66,11 @@ const Navbar = () => {
             </NavWrap>
 
             <SubNav show={subNav.show}>
-                <NavWrap>
+                <NavWrap className='subWrap'>
                     <Navul>
                         <NavItem
-                            active={checkActive(`${subNav.category}/페이지명`)}
-                            onClick={() => handleSubNavClick('/페이지명')}
+                            active={checkActive(`${subNav.category}/schedule`)}
+                            onClick={() => handleSubNavClick('/schedule')}
                         >
                             일정/결과
                         </NavItem>
@@ -102,20 +103,42 @@ export default Navbar
 
 const NavContainer = styled.nav`
     width: 100vw;
-    min-height: 60px;
+    min-height: 50px;
     background-color: #5546B7;
+
+    @media (max-width: 768px) {
+        min-height: 40px;
+    }
+
 `
 
 const NavWrap = styled.div`
     padding: 0 162px;
     height: 60px;
     margin: 0 auto;
+
+    .subWrap {
+        height: 50px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 0 15px;
+        height: 40px;
+
+        .subWrap {
+        height: 40px;
+        }
+    }
 `
 
 const Navul = styled.ul`
     display: flex;
-    font-size: 18px;
+    font-size: 16px;
     height: 100%;
+
+    @media (max-width: 768px) {
+        font-size: 14px;
+    }
 `;
 
 const NavItem = styled.li<{ active: boolean }>`
@@ -154,13 +177,13 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 1;
-    height: 60px;
+    height: 50px;
   }
 `;
 
 const SubNav = styled.nav<{ show: boolean }>`
   background-color: #EFEAFC;
-  height: ${props => (props.show ? '60px' : '0')};
+  height: ${props => (props.show ? '50px' : '0')};
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
   animation: ${fadeIn} 0.2s ease-in-out;
 `;
