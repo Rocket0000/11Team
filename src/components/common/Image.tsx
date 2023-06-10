@@ -39,9 +39,6 @@ const ImageContainer = styled.div<{
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: black;
-  border: none;
-  border-radius: 18px;
 
   display: flex;
   align-items: center;

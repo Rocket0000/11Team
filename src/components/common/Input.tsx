@@ -27,10 +27,11 @@ const StyledInput = styled.input`
   border: 1px solid #c7c9d9;
   border-radius: 4px;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
-    border: 3px solid #5f30e2;
+    border: 2px solid #5f30e2;
   }
 `;

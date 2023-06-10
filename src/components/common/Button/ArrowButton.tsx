@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 interface ArrowButtonProps {
   size?: "small" | "middle" | "large";
-  rotate?: boolean;
+  rotate: number;
 }
 
 const getSizeValue = (size?: "small" | "middle" | "large") => {
@@ -48,13 +48,10 @@ export default ArrowButton;
 const SvgCover = styled.div<{
   width: string;
   height: string;
-  rotate?: boolean;
+  rotate: number;
 }>`
+  cursor: pointer;
   width: ${({ width }) => width};
   height: ${({ height }) => height};
-  ${({ rotate }) =>
-    rotate &&
-    css`
-      transform: rotate(180deg);
-    `}
+  transform: ${({ rotate }) => `rotate(${rotate}deg)`};
 `;
