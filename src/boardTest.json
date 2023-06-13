@@ -1,0 +1,12 @@
+{
+  "message": "게시글 상세 조회 성공",
+  "data": {
+      "id": 18,
+      "title": "제목추가",
+      "content": "내요요요요요용요 수정",
+      "category": 1,
+      "created_at": "2023-06-04T11:08:44.000Z",
+      "nickname": "User1",
+      "views": 0
+  }
+}
