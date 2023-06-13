@@ -7,7 +7,6 @@ import axios from "axios";
 import userData from "./userData";
 import Input from "./../components/common/Input";
 import Button from "./../components/common/Button/Button";
-import Header from "./../components/common/Header/Header";
 
 interface AccountBox {
   login: string;
@@ -22,14 +21,15 @@ export let AccountBox = styled.div<AccountBox>`
   box-sizing: border-box;
   box-shadow: 2px 5px 6px rgba(0, 0, 0, 0.25);
   background-color: #fff;
-  position: absolute;
-  top: calc(50% - 300px);
+  magin: 0 auto;
+  position: relative;
 };
 `;
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -44,10 +44,24 @@ const LoginPage: React.FC = () => {
       .post("http://localhost:5500/api/v1/auth/logIn", { email, password })
       .then((response) => {
         // 로그인 성공
+        const token = response.data.data.userToken.accessToken;
+        console.log(response.data); //확인용
+        console.log("토큰 값 확인:", token); //확인용
+
+        if (token) {
+          // 토큰 값 로컬스토리지에 저장
+          localStorage.setItem("accessToken", token);
+          console.log("토큰이 로컬스토리지에 저장되었습니다.");
+        } else {
+          //토큰값 없으면
+          console.log("토큰 값이 없습니다.");
+        }
         console.log("로그인 되었습니다.");
+        alert('로그인 성공! 환영합니다!');
+        navigate("/");
       })
       .catch((error) => {
-        // 로그인 실패
+        //로그인 실패
         alert("잘못된 계정 또는 존재하지 않는 계정입니다.");
         window.location.reload();
       });
@@ -55,8 +69,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-      <Header />
-      <section>
+      <section style={{padding: "20px 0"}}>
         <AccountBox login="login">
           <AccountIntro />
           <div className="accountForm">
@@ -71,12 +84,14 @@ const LoginPage: React.FC = () => {
                 onChange={handlePasswordChange}
               />
             </article>
-            <Button
-              disabled={false}
-              purpose="base"
-              content="로그인"
-              onClick={handleLogin}
-            />
+            <div style={{ width: "100%", height: "40px", margin: "0 auto 15px auto" }}>
+              <Button
+                disabled={false}
+                purpose="base"
+                content="로그인"
+                onClick={handleLogin}
+              />
+            </div>
             <p className="goJoin">
               아직 회원이 아니세요? <Link to="/join">회원가입</Link>
             </p>
