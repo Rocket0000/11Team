@@ -1,34 +1,52 @@
 import * as React from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import MiuLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
 
-interface BreadCrumbProps{
-  path: string;
-  title: string;
-  currentPage: string;
-}
 
-function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-  event.preventDefault();
-  console.info('You clicked a breadcrumb.');
-}
 
-function BreadCrumb() {
+const  BreadCrumb = () => {
+  const src = window.location
+  const getCategory = src.href.split('/').splice(0,4);
+
+  let navigate = useNavigate();
+
+  const goCategory = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    navigate(`/${getCategory[3]}`);
+  }
+
+  const goHome = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    navigate('/');
+  }
+
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="#A5ACBA" href="/" onClick={handleClick}>
+    <MiuLink underline="hover" key="1" color="#A5ACBA" href="/" onClick={goHome}>
       홈
-    </Link>,
-    <Link
+    </MiuLink>,
+    <MiuLink
       underline="none"
       key="2"
       color="#A5ACBA"
-      href="/"//path 따와서 변경해야함
-      onClick={handleClick}
+      href={`/${getCategory[3]}`}
+      onClick={goCategory}
     >
-      카테고리이름 {/* 패스로 이름으로 변경해야함 */}
-    </Link>,
+      {(() => {
+        switch (getCategory[3]) {
+          case "soccer":
+            return '축구';
+          case "baseball":
+            return '야구';
+          case "esport":
+            return 'e-스포츠';
+          default:
+            return null;
+        }
+      })()}
+    </MiuLink>,
     <Typography key="3" color="#5F30E2">
       게시판
     </Typography>,

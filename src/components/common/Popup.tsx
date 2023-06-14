@@ -1,61 +1,91 @@
 import React from "react";
 import Button,{ ButtonProps } from "./Button/Button";
-import styled from "styled-components";
+import styled,{ css } from "styled-components";
 
 interface PopupProps extends ButtonProps {
   title : string;
   count : 1 | 2 ;
+  open: boolean;
   clickHandler : () => void;
   cancelEvent? : () => void; 
 }
 
-const Popup: React.FC<PopupProps> = ({title, count, disabled, purpose, content, clickHandler, cancelEvent}) => {
+const Popup: React.FC<PopupProps> = ({title, count, disabled, purpose, content, clickHandler, cancelEvent, open}) => {
 
   const text = content.split(',');
+  
+  
 
-  return(
-    <Bg>
-      <StyledPopup>
-        <h2>{title}</h2>
-        <ButtonBox btnCount={count}>
-          {
-            count === 2 ?
-            <>
+
+return(
+    <PopupBox isOpen={open}>
+      <Bg>
+        <StyledPopup>
+          <h2>{title}</h2>
+          <ButtonBox btnCount={count}>
+            {
+              count === 2 ?
+              // <>
+              //   <Button 
+              //     disabled={disabled} 
+              //     purpose='base' 
+              //     content={text[0]}
+              //     onClick={clickHandler}
+              //   />
+              //   <Button 
+              //     disabled={disabled} 
+              //     purpose="reportComment" 
+              //     content={text[1]} 
+              //     onClick={cancelEvent}
+              //   />
+              // </>
+                          <>
+                            <Button 
+                              disabled={disabled} 
+                              purpose={purpose} 
+                              content={text[0]}
+                              onClick={clickHandler}
+                            />
+                            <Button 
+                              disabled={disabled} 
+                              purpose={purpose} 
+                              content={text[1]} 
+                              onClick={cancelEvent}
+                            />
+                          </>
+              :
               <Button 
                 disabled={disabled} 
-                purpose="base" 
-                content={text[0]}
+                purpose={purpose} 
+                content={content} 
                 onClick={clickHandler}
               />
-              <Button 
-                disabled={disabled} 
-                purpose="reportComment" 
-                content={text[1]} 
-                onClick={cancelEvent}
-              />
-            </>
-            :
-            <Button 
-              disabled={disabled} 
-              purpose={purpose} 
-              content={content} 
-              onClick={clickHandler}
-            />
-          }
-        </ButtonBox>
-      </StyledPopup>
-    </Bg>
+            }
+          </ButtonBox>
+        </StyledPopup>
+      </Bg>
+    </PopupBox>
+
   );
 };
 
 export default Popup;
+
+const PopupBox = styled.div<{isOpen: boolean}>`
+  display: ${props => props.isOpen ? 'block' : 'none'};
+  position: fixed;
+
+  width: 100vw;
+  height: 100%;
+  background: transparent;
+`
 
 const Bg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 
-  width: 100vw;
+  width: 100%;
   height: 100%;
   background: rgba(85, 87, 112, 0.5);
 

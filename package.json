@@ -10,7 +10,6 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@toast-ui/react-editor": "^3.2.3",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.34",
     "@types/react": "^18.2.7",
@@ -20,6 +19,7 @@
     "react": "^18.2.0",
     "react-datepicker": "^4.12.0",
     "react-dom": "^18.2.0",
+    "react-fast-marquee": "^1.6.0",
     "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
@@ -56,6 +56,7 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2",
     "@types/react-datepicker": "^4.11.2",
+    "@types/react-slick": "^0.23.10",
     "@types/styled-components": "^5.1.26"
   }
 }

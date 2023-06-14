@@ -82,8 +82,8 @@ const Navbar = () => {
                             순위
                         </NavItem>
                         <NavItem
-                            active={checkActive(`${subNav.category}/페이지명`)}
-                            onClick={() => handleSubNavClick('/페이지명')}
+                            active={checkActive(`${subNav.category}/notice`)}
+                            onClick={() => handleSubNavClick('/notice')}
                         >
                             게시판
                         </NavItem>

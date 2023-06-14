@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 const PopularBadge = () => {
 
@@ -26,13 +25,12 @@ const PopularBadge = () => {
 export default PopularBadge;
 
 const Badge:React.CSSProperties = {
-  position: 'relative',
   width: '85px',
   display: 'flex',
   alignItems: 'center',
   gap: '4px',
   top: 0,
   left: 0,
-  //transform: 'translate(0, 50%)'//게시판 적용후 삭제 할지 안할지 결정
+  flex: 0.5,
 }
 

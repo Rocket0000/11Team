@@ -6,7 +6,7 @@ import {ReactComponent as DoubleNext} from "../../../assets/icons/DoubleNext.svg
 import {ReactComponent as Previous} from "../../../assets/icons/Previous.svg"
 import {ReactComponent as DoublePrevious} from "../../../assets/icons/DoublePrevious.svg"
 
-interface PaginationProps {
+export interface PaginationProps {
     total: number;
     limit: number;
     page: number;
@@ -76,7 +76,7 @@ const Nav = styled.nav`
   justify-content: center;
   align-items: center;
   gap: 14px;
-  margin: 24px auto;
+  margin: 24px auto 0;
 `
 
 const PageButton = styled.button`
