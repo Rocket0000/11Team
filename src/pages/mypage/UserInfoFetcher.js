@@ -19,7 +19,7 @@ const UserInfoFetcher = ({ onSuccess, onError }) => {
       throw new Error("유저 아이디를 찾을 수 없습니다.");
     }
     const userId = decodedToken.user_id;
-    console.log("유저 아이디:", userId); //확인용
+    //console.log("유저 아이디:", userId); //확인용
     console.log("유저 이미지:: ");
     //console.log("유저 토큰:", token); //확인용
 
@@ -103,4 +103,3 @@ export const handleWithdraw = () => {
 };
 
 export default UserInfoFetcher;
-//회원탈퇴 후에 catch문 한번더 실행됨

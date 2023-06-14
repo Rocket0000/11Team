@@ -35,12 +35,12 @@ const JoinPage: React.FC = () => {
         console.log("회원가입 성공");
         alert("회원가입이 완료되었습니다. 환영합니다!");
         //확인용 [시작]
-        console.log("이메일:", email);
-        console.log("비밀번호:", password);
-        console.log("선호종목:", interest);
-        console.log("닉네임:", nickname);
-        console.log("핸드폰:", phone);
-        console.log("아바타 ID:", avatarId);
+        // console.log("이메일:", email);
+        // console.log("비밀번호:", password);
+        // console.log("선호종목:", interest);
+        // console.log("닉네임:", nickname);
+        // console.log("핸드폰:", phone);
+        // console.log("아바타 ID:", avatarId);
         //확인용 [끝]
         navigate("/login");
       })
@@ -56,19 +56,14 @@ const JoinPage: React.FC = () => {
       return;
     }
 
-    // const emailExists = userData.some((user) => user.email === email);
-    // if (emailExists) {
-    //   setErrorMessage("이미 등록된 이메일입니다.");
-    //   return;
-    // }
-
     if (
       email === "" ||
       password === "" ||
       confirmPassword === "" ||
       interest === "" ||
       nickname === "" ||
-      phone === ""
+      phone === "" ||
+      avatarId === null
     ) {
       alert("모든 필수 정보를 입력해주세요.");
       return;
@@ -147,7 +142,7 @@ const JoinPage: React.FC = () => {
                 </li>
                 <li>
                   <p className="inputField">프로필아바타</p>
-                  <ProfileImg onAvatarChange={handleAvatarChange} />
+                  <ProfileImg onAvatarChange={handleAvatarChange} base={true} />
                 </li>
               </ul>
             </StyledArticle>

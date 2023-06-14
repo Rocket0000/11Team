@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import UserInfoFetcher, { handleWithdraw } from "./UserInfoFetcher";
+import Button from "./../../components/common/Button/Button";
 import ProfileImg from "./ProfileImg";
+import "./../../styles/mypage.css";
 
 const MyInfo = () => {
   const navigate = useNavigate();
@@ -70,7 +72,7 @@ const MyInfo = () => {
       );
 
       console.log("수정 성공", response.data);
-      window.location.reload();
+      //window.location.reload();
       setEditing(false);
     } catch (error: any) {
       console.log("수정 실패", error.message);
@@ -87,96 +89,124 @@ const MyInfo = () => {
 
   const handleWithdrawClick = async () => {
     try {
-      alert("정말 탈퇴하시겠습니까?");
-      await handleWithdraw(); // UserInfoFetcher 컴포넌트에서 불러온 handleWithdraw 함수 실행
-      navigate("/login");
+      const confirmed = window.confirm("정말 탈퇴하시겠습니까?");
+      if (confirmed) {
+        await handleWithdraw(); // UserInfoFetcher 컴포넌트에서 불러온 handleWithdraw 함수 실행
+        navigate("/login");
+      } else {
+        console.log("탈퇴 취소");
+      }
+    } catch (error) {
+      console.error("회원 탈퇴 실패:", error);
     } finally {
       console.log("회원 탈퇴 무사 종료");
     }
   };
+
   return (
-    <div>
-      <h2>유저정보</h2>
-      <UserInfoFetcher
-        onSuccess={handleFetchSuccess}
-        onError={handleFetchError}
-      />
-      <table style={{ textAlign: "left" }}>
-        <tbody>
-          <tr>
-            <th>이메일</th>
-            <td>{userInfo.email}</td>
-          </tr>
-          <tr>
-            <th>닉네임</th>
-            <td>
-              {editing ? (
-                <input
-                  type="text"
-                  value={userInfo.nickname}
-                  onChange={handleNicknameChange}
-                />
-              ) : (
-                userInfo.nickname
-              )}
-            </td>
-          </tr>
-          <tr>
-            <th>핸드폰</th>
-            <td>
-              {editing ? (
-                <input
-                  type="text"
-                  value={userInfo.phone}
-                  onChange={handlePhoneChange}
-                />
-              ) : (
-                userInfo.phone
-              )}
-            </td>
-          </tr>
-          <tr>
-            <th>선호종목</th>
-            <td>
-              {editing ? (
-                <select
-                  value={userInfo.favoriteSport}
-                  onChange={handleFavoriteSportChange}
-                >
-                  <option value="">선호 종목을 선택하세요</option>
-                  <option value="0">축구</option>
-                  <option value="1">야구</option>
-                  <option value="2">롤</option>
-                </select>
-              ) : (
-                userInfo.favoriteSport
-              )}
-            </td>
-          </tr>
-          {editing && (
+    <>
+      <div className="mh500 myInfoDiv">
+        <h2 className="pageTitle">유저정보</h2>
+        <UserInfoFetcher
+          onSuccess={handleFetchSuccess}
+          onError={handleFetchError}
+        />
+        <table className="myinfoTable">
+          <tbody>
             <tr>
-              <th>프로필 이미지</th>
+              <th>이메일</th>
+              <td>{userInfo.email}</td>
+            </tr>
+            <tr>
+              <th>닉네임</th>
               <td>
-                <ProfileImg
-                  onAvatarChange={(selectedImage) =>
-                    setUserInfo((prevUserInfo) => ({
-                      ...prevUserInfo,
-                      img: selectedImage.id,
-                    }))
-                  }
-                />
+                {editing ? (
+                  <input
+                    type="text"
+                    value={userInfo.nickname}
+                    onChange={handleNicknameChange}
+                  />
+                ) : (
+                  userInfo.nickname
+                )}
               </td>
             </tr>
-          )}
-        </tbody>
-      </table>
-      {editing ? (
-        <button onClick={handleSaveClick}>저장</button>
-      ) : (
-        <button onClick={handleEditClick}>수정</button>
-      )}
-      <button onClick={handleWithdrawClick}>회원탈퇴</button>
-    </div>
+            <tr>
+              <th>핸드폰</th>
+              <td>
+                {editing ? (
+                  <input
+                    type="text"
+                    value={userInfo.phone}
+                    onChange={handlePhoneChange}
+                  />
+                ) : (
+                  userInfo.phone
+                )}
+              </td>
+            </tr>
+            <tr>
+              <th>선호종목</th>
+              <td>
+                {editing ? (
+                  <select
+                    value={userInfo.favoriteSport}
+                    onChange={handleFavoriteSportChange}
+                  >
+                    <option value="">선호 종목을 선택하세요</option>
+                    <option value="0">축구</option>
+                    <option value="1">야구</option>
+                    <option value="2">롤</option>
+                  </select>
+                ) : (
+                  userInfo.favoriteSport
+                )}
+              </td>
+            </tr>
+            {editing && (
+              <tr>
+                <th>프로필 이미지</th>
+                <td>
+                  <ProfileImg
+                    onAvatarChange={(selectedImage) =>
+                      setUserInfo((prevUserInfo) => ({
+                        ...prevUserInfo,
+                        img: selectedImage.id,
+                      }))
+                    }
+                  />
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ width: "150px", margin: "0 0 20px auto" }}>
+        {editing ? (
+          <Button
+            disabled={false}
+            purpose="base"
+            content="수정사항 저장"
+            onClick={handleSaveClick}
+          />
+        ) : (
+          <Button
+            disabled={false}
+            purpose="base"
+            content="회원정보 수정"
+            onClick={handleEditClick}
+          />
+        )}
+      </div>
+      <div style={{ width: "85px", marginLeft: "auto" }}>
+        <Button
+          disabled={false}
+          purpose="reportComment"
+          content="회원탈퇴"
+          onClick={handleWithdrawClick}
+        />
+      </div>
+    </>
   );
 };
 

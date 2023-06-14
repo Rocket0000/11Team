@@ -50,7 +50,7 @@ const ProfilePopper = (props: ProfilePopperProps) => {
                   </TextContainer>
                 </ProfileInfo>
               </ProfilePopperBody>
-              <Link to="/mypage" onClick={onClose}>
+              <Link to="/mypage/MyWrite" onClick={onClose}>
                 <PopperButton variant="contained">마이 페이지</PopperButton>
               </Link>
             </ProfilePopperContainer>

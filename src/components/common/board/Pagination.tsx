@@ -26,6 +26,10 @@ const Pagination: React.FC<PaginationProps> = ({total, limit, page, setPage}) =>
     const showList = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     console.log('showList:::', showList);
     
+    if (total <= limit) {
+      return null; // 게시글이 10개 이하인 경우 페이지네이션 숨김
+    }
+    
 
     return (
         <Nav>

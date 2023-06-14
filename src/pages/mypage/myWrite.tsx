@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -8,7 +8,7 @@ import TableList from "../../components/common/TableList";
 import UserInfoFetcher from "./UserInfoFetcher";
 import MyInfo from "./myInfo";
 
-import dummyPosts from "./dummyPosts"; //더미 게시글 -> 나중에 지우기
+import MyPostsPage from "./myPostsPage";
 
 const MyWrite = () => {
   const [nickname, setNickname] = useState("");
@@ -16,14 +16,14 @@ const MyWrite = () => {
   const [profileImg, setProfileImg] = useState(""); // 프로필 이미지 상태 추가
   const navigate = useNavigate();
 
-  const handleFetchSuccess = (userInfo:any) => {
+  const handleFetchSuccess = (userInfo: any) => {
     setNickname(userInfo.nickname);
     setFavorite(userInfo.favoriteSport);
     const imgId = userInfo.img; // 유저의 이미지 ID
     setProfileImg(`/images/profile${imgId}.png`); // 프로필 이미지 경로 설정
   };
 
-  const handleFetchError = (error:any) => {
+  const handleFetchError = (error: any) => {
     console.log("불러오기 실패", error);
   };
 
@@ -34,11 +34,18 @@ const MyWrite = () => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const imgId = localStorage.getItem("profileImgId");
+    if (imgId) {
+      setProfileImg(`/images/profile${imgId}.png`);
+    }
+  }, []);
+
   return (
     <>
       <StyledSection>
         <MyProfile>
-        <div
+          <div
             className="profileImg"
             style={{ backgroundImage: `url(${profileImg})` }}
           ></div>
@@ -65,14 +72,14 @@ const MyWrite = () => {
       />
     </>
   );
-}
+};
 export default MyWrite;
 
-//마이페이지 공통
+//마이페이지 공통 스타일
 const StyledSection = styled.section`
   background-color: #fff;
   padding: 0px 162px;
-  margin: 0px auto;
+  margin: 30px auto;
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;

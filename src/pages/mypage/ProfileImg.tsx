@@ -9,9 +9,11 @@ interface ProfileImage {
 
 interface GalleryProps {
   onAvatarChange: (selectedImage: ProfileImage) => void;
+  base?: boolean;
+  user?: ProfileImage | null;
 }
 
-const ProfileImg: React.FC<GalleryProps> = ({ onAvatarChange }) => {
+const ProfileImg: React.FC<GalleryProps> = ({ onAvatarChange, base, user }) => {
   const thumbnailImages: ProfileImage[] = [
     {
       id: 1,
@@ -40,7 +42,7 @@ const ProfileImg: React.FC<GalleryProps> = ({ onAvatarChange }) => {
   ];
 
   const [selectedImage, setSelectedImage] = useState<ProfileImage | null>(
-    thumbnailImages[0]
+    base ? thumbnailImages[0] : user || null
   );
 
   const handleThumbnailClick = (image: ProfileImage) => {
@@ -51,7 +53,7 @@ const ProfileImg: React.FC<GalleryProps> = ({ onAvatarChange }) => {
   return (
     <div className="profileSelect">
       <div className="mainImage">
-        <img
+      <img
           src={
             selectedImage
               ? selectedImage.fullImageUrl
@@ -63,7 +65,7 @@ const ProfileImg: React.FC<GalleryProps> = ({ onAvatarChange }) => {
         />
       </div>
       <div className="thumbnails">
-        {thumbnailImages.map((image: ProfileImage) => (
+      {thumbnailImages.map((image: ProfileImage) => (
           <img
             key={image.id}
             src={image.thumbnailUrl}
