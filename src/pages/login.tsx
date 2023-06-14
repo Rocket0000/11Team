@@ -59,6 +59,7 @@ const LoginPage: React.FC = () => {
         console.log("로그인 되었습니다.");
         alert('로그인 성공! 환영합니다!');
         navigate("/");
+        window.location.reload();
       })
       .catch((error) => {
         //로그인 실패
@@ -69,7 +70,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-      <section style={{padding: "20px 0"}}>
+      <section style={{ padding: "20px 0" }}>
         <AccountBox login="login">
           <AccountIntro />
           <div className="accountForm">

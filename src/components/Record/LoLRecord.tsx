@@ -12,15 +12,29 @@ const LoLRecord = () => {
         reFetch(newSeason);
     }
 
-    const headers = ['순위', '팀', '승', '패', '득실차', '승률'];
-    const headerElements = headers.map((header, index) => (
+    // 테이블 헤더 데이터
+    const teamHeaders = ['순위', '팀'];
+    const dataHeaders = ['승', '패', '득실차', '승률'];
+
+    const teamHeaderElements = teamHeaders.map((header, index) => (
         <th
             key={index}
-            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''} ${index === 2 ? styles.tableHeaderPoints : ''}`}
+            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''}`}
         >
             {header}
         </th>
     ));
+
+    const dataHeaderElements = dataHeaders.map((header, index) => (
+        <th
+            key={index + teamHeaders.length}
+            className={`${styles.tableHeader} ${index === 3 ? styles.tableHeaderPoints : ''}`}
+        >
+            {header}
+        </th>
+    ));
+
+    const headers = [...teamHeaderElements, ...dataHeaderElements];
 
     // 롤 승률로 정렬
     const sortedData = [...data].sort((a, b) => {
@@ -62,9 +76,20 @@ const LoLRecord = () => {
             })}
         </>
     );
+
+    const teamDatas = sortedData.map((team, index) => {
+        const { team_name, img } = team;
+        return (
+            <tr key={index}>
+                <td className={styles.rank}>{index + 1}</td>
+                <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
+            </tr>
+        );
+    });
+
     return (
         <div>
-            <RecordPage headerTitle={headerElements} tbodyData={datas} selectedSeasonCallback={handleSeasonChange} />
+            <RecordPage headerTitle={headers} teamHeaderElements={teamHeaderElements} tbodyData={datas} teamDatas={teamDatas} selectedSeasonCallback={handleSeasonChange} />
         </div>
     )
 }

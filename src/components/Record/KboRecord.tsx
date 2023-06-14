@@ -12,15 +12,28 @@ const KboRecord = () => {
     }
 
     // 테이블 헤더 데이터
-    const headers = ['순위', '팀', '경기', '승', '무', '패', '승률', '게임차'];
-    const headerElements = headers.map((header, index) => (
+    const teamHeaders = ['순위', '팀'];
+    const dataHeaders = ['경기', '승', '무', '패', '승률', '게임차'];
+
+    const teamHeaderElements = teamHeaders.map((header, index) => (
         <th
             key={index}
-            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''} ${index === 6 ? styles.tableHeaderPoints : ''}`}
+            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''}`}
         >
             {header}
         </th>
     ));
+
+    const dataHeaderElements = dataHeaders.map((header, index) => (
+        <th
+            key={index + teamHeaders.length}
+            className={`${styles.tableHeader} ${index === 4 ? styles.tableHeaderPoints : ''}`}
+        >
+            {header}
+        </th>
+    ));
+
+    const headers = [...teamHeaderElements, ...dataHeaderElements];
 
     // 야구는 승률로 정렬 (승률이 같으면 상대전적으로 정렬해야하지만 상대전적 데이터 x)
     const sortedData = [...data].sort((a, b) => {
@@ -40,9 +53,8 @@ const KboRecord = () => {
                 const totalGames = wins + drawns + losses;
                 // 승률 계산 (무승부 포함 x)
                 const winRate = (wins / (wins + losses)).toFixed(3);
-                // 게임차 계산 (kbo 기준)
+                // 게임차 계산
                 const gameBehind = index === 0 ? '0.0' : (((sortedData[0].wins - wins) + (losses - sortedData[0].losses)) / 2).toFixed(1);
-
 
                 return (
                     <tr key={team_name}>
@@ -60,9 +72,21 @@ const KboRecord = () => {
         </>
     );
 
+    const teamDatas = sortedData.map((team, index) => {
+        const { team_name, img } = team;
+        const teamNameSplit = team_name.split(' ')[0];
+
+        return (
+            <tr key={index}>
+                <td className={styles.rank}>{index + 1}</td>
+                <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{teamNameSplit}</span></td>
+            </tr>
+        );
+    });
+
     return (
         <div>
-            <RecordPage headerTitle={headerElements} tbodyData={datas} selectedSeasonCallback={handleSeasonChange} />
+            <RecordPage headerTitle={headers} teamHeaderElements={teamHeaderElements} tbodyData={datas} teamDatas={teamDatas} selectedSeasonCallback={handleSeasonChange} />
         </div>
     )
 }

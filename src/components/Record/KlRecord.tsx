@@ -12,15 +12,29 @@ const KlRecord = () => {
         reFetch(newSeason);
     }
 
-    const headers = ['순위', '팀', '경기', '승', '무', '패', '득점', '실점', '득실차', '승점'];
-    const headerElements = headers.map((header, index) => (
+    // 테이블 헤더 데이터
+    const teamHeaders = ['순위', '팀'];
+    const dataHeaders = ['경기', '승', '무', '패', '득점', '실점', '득실차', '승점'];
+
+    const teamHeaderElements = teamHeaders.map((header, index) => (
         <th
             key={index}
-            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''} ${index === 9 ? styles.tableHeaderPoints : ''}`}
+            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''}`}
         >
             {header}
         </th>
     ));
+
+    const dataHeaderElements = dataHeaders.map((header, index) => (
+        <th
+            key={index + teamHeaders.length}
+            className={`${styles.tableHeader} ${index === 7 ? styles.tableHeaderPoints : ''}`}
+        >
+            {header}
+        </th>
+    ));
+
+    const headers = [...teamHeaderElements, ...dataHeaderElements];
 
 
     // 축구는 승점 높은순으로 정렬
@@ -61,9 +75,19 @@ const KlRecord = () => {
         </>
     );
 
+    const teamDatas = sortedData.map((team, index) => {
+        const { team_name, img } = team;
+        return (
+            <tr key={index}>
+                <td className={styles.rank}>{index + 1}</td>
+                <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
+            </tr>
+        );
+    });
+
     return (
         <div>
-            <RecordPage headerTitle={headerElements} tbodyData={datas} selectedSeasonCallback={handleSeasonChange} />
+            <RecordPage headerTitle={headers} teamHeaderElements={teamHeaderElements} tbodyData={datas} teamDatas={teamDatas} selectedSeasonCallback={handleSeasonChange} />
         </div>
     )
 }
