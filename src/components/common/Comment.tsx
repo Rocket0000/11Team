@@ -27,6 +27,8 @@ const Comment:React.FC<CommentProps> = ({ data, localSaveUserId}) => {
   const [ showReportPopup, setShowReportPopup ] = useState(false);
   const [ showLoginCheckPopup, setShowLoginCheckPopup ] = useState(false);
 
+  const popupBtn = {disable: false}
+
   const navigation = useNavigate();
 
   const wrapComment = () => {
@@ -109,7 +111,8 @@ const Comment:React.FC<CommentProps> = ({ data, localSaveUserId}) => {
                   count={2}
                   disabled={false}
                   content='신고하기,취소하기'
-                  purpose='base'
+                  firstBtn="base"
+                  secondBtn="reportComment"
                   clickHandler={() => reportComment(item.comment_id)}
                   cancelEvent={() => setShowReportPopup(false)}
                   open={showReportPopup}
@@ -119,7 +122,8 @@ const Comment:React.FC<CommentProps> = ({ data, localSaveUserId}) => {
                   count={2}
                   disabled={false}
                   content='로그인,취소하기'
-                  purpose='base'
+                  firstBtn="base"
+                  secondBtn="reportComment"
                   clickHandler={reportLogin}
                   cancelEvent={() => setShowLoginCheckPopup(false)}
                   open={showLoginCheckPopup}

@@ -60,6 +60,9 @@ const TableCell = styled.td<{ width?: string }>`
 
 const TableList: React.FC<TableProps> = ({ show, data, total, limit, page, setPage, popularData, category }) => {
   const offset = (page - 1) * limit;
+  const myWriteLoction = window.location.href.split('/');
+
+  const pageName = myWriteLoction[3] + '/' + myWriteLoction[4];
 
   const renderTableHeader = () => {
     if (show === "all") {
@@ -94,7 +97,8 @@ const TableList: React.FC<TableProps> = ({ show, data, total, limit, page, setPa
       <TableRow key={post.id} even={index % 2 === 1}>
         <TableCell width="80px">{post.id}</TableCell>
         <TableCell>
-          <Link to={`/${category}/notice/detail/${post.id}`}>{post.title}</Link>
+          <Link to={myWriteLoction[4] === 'MyWrite' ? `/MyWrite/notice/detail/${post.id}` :
+          `/${category}/notice/detail/${post.id}`}>{post.title}</Link>
         </TableCell>
         <TableCell width="100px">{post.created_at}</TableCell>
         {show === "all" && <TableCell width="100px">{post.nickname}</TableCell>}

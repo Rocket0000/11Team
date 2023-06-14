@@ -174,7 +174,7 @@ return(
             />
           </tbody>
           </TableTag>
-          <SectionTag padding="20px" height="568px">
+          <SectionTag padding="20px" height="auto">
             <div data-color-mode="light">
               <MDEditor.Markdown source={notice.content} />
             </div>
@@ -217,7 +217,8 @@ return(
         count={1}
         disabled={false}
         content='확인'
-        purpose='base'
+        firstBtn='base'
+        secondBtn="reportComment"
         clickHandler={() => setShowLengthPopup(false)}
         open={showLengthPopup}
       />
@@ -226,7 +227,8 @@ return(
         count={1}
         disabled={false}
         content='확인'
-        purpose='base'
+        firstBtn='base'
+        secondBtn="reportComment"
         clickHandler={() => setShowEmptyPopup(false)}
         open={showEmptyPopup}
       />
@@ -235,7 +237,8 @@ return(
         count={2}
         disabled={false}
         content='로그인,취소하기'
-        purpose='base'
+        firstBtn="base"
+        secondBtn="reportComment"
         clickHandler={goLogin}
         cancelEvent={() => setShowLoginPopup(false)}
         open={showLoginPopup}
@@ -245,7 +248,8 @@ return(
         count={2}
         disabled={false}
         content='신고하기,취소하기'
-        purpose='base'
+        firstBtn="base"
+        secondBtn="reportComment"
         clickHandler={postReportHandler}
         cancelEvent={() => setShowPostReportPopup(false)}
         open={showPostReportPopup}

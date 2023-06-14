@@ -2,15 +2,19 @@ import React from "react";
 import Button,{ ButtonProps } from "./Button/Button";
 import styled,{ css } from "styled-components";
 
-interface PopupProps extends ButtonProps {
+interface PopupProps{
   title : string;
   count : 1 | 2 ;
   open: boolean;
+  disabled: boolean;
+  content: string;
+  firstBtn: 'base';
+  secondBtn: 'reportComment';
   clickHandler : () => void;
   cancelEvent? : () => void; 
 }
 
-const Popup: React.FC<PopupProps> = ({title, count, disabled, purpose, content, clickHandler, cancelEvent, open}) => {
+const Popup: React.FC<PopupProps> = ({title, count, clickHandler, cancelEvent, open, disabled, content, firstBtn, secondBtn}) => {
 
   const text = content.split(',');
   
@@ -42,13 +46,13 @@ return(
                           <>
                             <Button 
                               disabled={disabled} 
-                              purpose={purpose} 
+                              purpose={firstBtn} 
                               content={text[0]}
                               onClick={clickHandler}
                             />
                             <Button 
                               disabled={disabled} 
-                              purpose={purpose} 
+                              purpose={secondBtn} 
                               content={text[1]} 
                               onClick={cancelEvent}
                             />
@@ -56,8 +60,8 @@ return(
               :
               <Button 
                 disabled={disabled} 
-                purpose={purpose} 
-                content={content} 
+                purpose={firstBtn} 
+                content={text[0]} 
                 onClick={clickHandler}
               />
             }

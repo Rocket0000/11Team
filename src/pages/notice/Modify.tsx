@@ -95,7 +95,7 @@ const Modify = () => {
         <BtnGroup>
           <Button 
             purpose="base"
-            content=""
+            content="등록"
             disabled={false}
             onClick={postAddHandler}
           />
@@ -113,7 +113,8 @@ const Modify = () => {
         count={1}
         disabled={false}
         content='확인'
-        purpose='base'
+        firstBtn='base'
+        secondBtn="reportComment"
         clickHandler={() => setShowCancelPopup(false)}
         open={showCancelPopup}
       />

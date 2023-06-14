@@ -109,7 +109,8 @@ const List = () => {
           count={2}
           disabled={false}
           content='로그인,취소하기'
-          purpose='base'
+          firstBtn='base'
+          secondBtn="reportComment"
           clickHandler={() => navigation('/login')}
           cancelEvent={() => setShowLoginPopup(false)}
           open={showLoginPopup}
