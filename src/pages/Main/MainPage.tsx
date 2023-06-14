@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 
 import ScheduleBox from "../../components/Main/ScheduleBox";
-import WeatherBox from "../../components/Main/WeatherBox";
+import WeatherBox from "../../components/Main/Weather/WeatherBox";
 import RankBox from "../../components/Main/RankBox";
 import CommunityBox from "../../components/Main/CommunityBox";
 import ShortsBox from "../../components/Main/ShortsBox";
@@ -16,9 +16,9 @@ const MainPage = () => {
       <Body>
         <ScheduleBox />
         <ShortsBox />
-        <WeatherBox />
         <CommunityBox />
         <RankBox />
+        <WeatherBox />
       </Body>
     </>
   );

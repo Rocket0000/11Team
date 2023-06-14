@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
     const [subNav, setSubNav] = useState({
         show: false,
         category: ''
     });
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -66,8 +68,8 @@ const Navbar = () => {
             </NavWrap>
 
             <SubNav show={subNav.show}>
-                <NavWrap className='subWrap'>
-                    <Navul>
+                <SubWrap>
+                    <SubNavul>
                         <NavItem
                             active={checkActive(`${subNav.category}/schedule`)}
                             onClick={() => handleSubNavClick('/schedule')}
@@ -93,8 +95,8 @@ const Navbar = () => {
                         >
                             쇼츠
                         </NavItem>
-                    </Navul>
-                </NavWrap>
+                    </SubNavul>
+                </SubWrap>
             </SubNav>
         </NavContainer>
     );
@@ -109,27 +111,29 @@ const NavContainer = styled.nav`
     @media (max-width: 768px) {
         min-height: 40px;
     }
-
 `
 
 const NavWrap = styled.div`
     padding: 0 162px;
     height: 60px;
     margin: 0 auto;
-
-    .subWrap {
-        height: 50px;
+    
+    @media (max-width: 1024px) {
+        padding: 0 15px;
     }
 
     @media (max-width: 768px) {
-        padding: 0 15px;
-        height: 40px;
-
-        .subWrap {
-        height: 40px;
-        }
+        height: 40px
     }
-`
+`;
+
+const SubWrap = styled(NavWrap)`
+    height: 50px;
+
+    @media (max-width: 768px) {
+        height: 40px
+    }
+`;
 
 const Navul = styled.ul`
     display: flex;
@@ -139,6 +143,12 @@ const Navul = styled.ul`
     @media (max-width: 768px) {
         font-size: 14px;
     }
+`;
+
+const SubNavul = styled(Navul)`
+  @media (max-width: 768px) {
+    justify-content: space-between;
+  }
 `;
 
 const NavItem = styled.li<{ active: boolean }>`
@@ -151,6 +161,7 @@ const NavItem = styled.li<{ active: boolean }>`
     font-weight: bold;
     opacity: ${props => props.active ? "1" : "0.5"};
     transition: opacity 0.2s ease-in-out;
+
     &:first-child {
        padding-left: 0;
     }
@@ -170,20 +181,13 @@ const NavLink = styled(Link)`
         }
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    height: 0;
-  }
-  to {
-    opacity: 1;
-    height: 50px;
-  }
-`;
 
 const SubNav = styled.nav<{ show: boolean }>`
   background-color: #EFEAFC;
   height: ${props => (props.show ? '50px' : '0')};
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
-  animation: ${fadeIn} 0.2s ease-in-out;
+
+  @media (max-width: 768px) {
+        height: ${props => (props.show ? '40px' : '0')};
+    }
 `;

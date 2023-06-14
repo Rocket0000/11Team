@@ -89,6 +89,10 @@ const SeasonHeader = styled.div`
     &:hover {
         color: #5546B7;
     }
+
+    @media (max-width: 768px) {
+        font-size: 24px;
+    }
 `;
 
 const DropdownIcon = styled.span`
