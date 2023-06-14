@@ -109,6 +109,7 @@ const StyledPopup = styled.div`
     font-size: 18px;
     word-break: keep-all;
     text-align: center;
+    white-space: pre-wrap;
   }
 `;
 

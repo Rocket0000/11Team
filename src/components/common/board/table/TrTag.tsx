@@ -1,28 +1,27 @@
-import React from "react";
+import React,{Dispatch, SetStateAction} from "react";
 import styled from "styled-components";
 
 import Dropdown from "../../Dropdown";
-import Input,{InputStyledProps} from "../../Input";
-
-
-//API연결 때 지울거예정
-import testData from '../../../../boardTest.json';
-
+import Input from "../../Input";
 
 type Type = 'edit' | 'colSpanType' | 'default';
-type Category = '축구' | '야구' | 'e-sport';
+
 
 interface TrTypeProps{
   rowType? : Type;
   thTitle : string; 
   trType? : string;//'edit' | 'select'
   colSpan? : number;
-  inputProps? : InputStyledProps;
+  inputType?: string;
+  inputValue?: string | any;
 
   tdContent? : object;//detail페이지에 들어갈 데이터
+
+  setInput?: Dispatch<SetStateAction<string>> | any;
+  setDropDown? : Dispatch<SetStateAction<string>> | any;
 }
 
-const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan, inputProps, tdContent }) => {
+const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan,  inputType, inputValue, tdContent, setInput, setDropDown }) => {
 
   const thContent = thTitle.split(',');
 
@@ -32,7 +31,6 @@ const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan, inputP
   const defaultArr = Object.values(data).slice(3);
   const newArr = defaultArr.reverse().slice(0,4);
   const defaultData = [...newArr].reverse();
-
 
   {(() => {
     switch(defaultData[0]){
@@ -46,7 +44,6 @@ const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan, inputP
         return '';
     }
   })()}
-
 
   return(
     <tr>
@@ -62,9 +59,9 @@ const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan, inputP
                       {(() => {
                             switch (trType) {
                               case "select":
-                                return <Dropdown allCategory={true} purpose="middle" dropdownSelect={() => console.log('확인')}/>;
+                                return <Dropdown allCategory={true} purpose="middle" dropdownSelect={(category) => setDropDown(category)}/>;
                               case "input":
-                                return <Input type={inputProps?.type} value={(inputProps?.value) as string} onChange={ e => e } />
+                                return <Input type={inputType} value={inputValue} onChange={(e) => setInput(e)} />
                               default:
                                 return <p>'error::: select 와 input 중 골라주세요'</p>;
                             }

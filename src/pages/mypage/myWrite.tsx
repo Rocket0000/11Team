@@ -172,8 +172,8 @@ const TabMenu: React.FC = () => {
         {activeTab === 0 && (
           <Tab label="Tab 1">
             <p>작성글 보기</p>
-            <TableList show="all" data={dummyPosts} />
-            <TableList show="my" data={dummyPosts} />
+            {/* <TableList show="all" data={dummyPosts} />
+            <TableList show="my" data={dummyPosts} /> */}
           </Tab>
         )}
         {activeTab === 1 && (

@@ -10,6 +10,8 @@ import Comment from "../../components/common/Comment";
 import BreadCrumb from "../../components/common/board/BreadCrumb";
 import Popup from "../../components/common/Popup";
 
+import MDEditor from "@uiw/react-md-editor";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -173,14 +175,9 @@ return(
           </tbody>
           </TableTag>
           <SectionTag padding="20px" height="568px">
-            <article style={{ overflow: 'auto', height: '100%'}}>
-              <div style={{margin: '0 0 28px'}}>
-                <img src={`${notice.img}`} alt="게시판 사진" />
-              </div>
-              <div>
-                {notice.content}
-              </div>
-            </article>    
+            <div data-color-mode="light">
+              <MDEditor.Markdown source={notice.content} />
+            </div>
           </SectionTag>
       </BoardBg>
       <SectionTag margin="37px 0 47px" display="flex">

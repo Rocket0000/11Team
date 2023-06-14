@@ -60,7 +60,7 @@ const List = () => {
     if(localStorage.getItem('accessToken') === ''){//일단 낼 수빈님께 말씀드려서 쿠키에 로그인 시 저장 하는 방법 사용 할 거임(로그인체크여부)
       setShowLoginPopup(true);
     }
-    navigation('/notice/edit')
+    navigation(`/${pageNumber}/notice/edit`)
   }
 
   return(

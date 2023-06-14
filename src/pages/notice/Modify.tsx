@@ -14,7 +14,7 @@ import Button from "../../components/common/Button/Button";
 import Popup from "../../components/common/Popup";
 import styled from "styled-components";
 
-const Edit = () => {
+const Modify = () => {
   
   const size = ['15%','85%'];
   const type = ['select','input'];
@@ -95,7 +95,7 @@ const Edit = () => {
         <BtnGroup>
           <Button 
             purpose="base"
-            content="등록"
+            content=""
             disabled={false}
             onClick={postAddHandler}
           />
@@ -122,7 +122,7 @@ const Edit = () => {
   )
 }
 
-export default Edit;
+export default Modify;
 
 
 const BtnGroup = styled.div`
