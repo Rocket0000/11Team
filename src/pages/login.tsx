@@ -23,7 +23,6 @@ export let AccountBox = styled.div<AccountBox>`
   background-color: #fff;
   magin: 0 auto;
   position: relative;
-};
 `;
 
 const LoginPage: React.FC = () => {

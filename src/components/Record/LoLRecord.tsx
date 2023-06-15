@@ -2,6 +2,7 @@ import React from 'react'
 import styles from '../../styles/Record.module.scss'
 import RecordPage from '../../pages/RecordPage';
 import useRank from '../../hooks/useRank';
+import styled from "styled-components";
 
 const LoLRecord = () => {
     const { reFetch, data } = useRank();
@@ -65,12 +66,12 @@ const LoLRecord = () => {
 
                 return (
                     <tr key={team_name}>
-                        <td className={styles.rank}>{rank}</td>
-                        <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
-                        <td className={styles.selected}>{wins}</td>
-                        <td>{losses}</td>
-                        <td>{scoreDifference}</td>
-                        <td>{winRate}</td>
+                        <Td className={styles.rank}>{rank}</Td>
+                        <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
+                        <Td>{wins}</Td>
+                        <Td>{losses}</Td>
+                        <Td>{scoreDifference}</Td>
+                        <Td className={styles.selected}>{winRate}</Td>
                     </tr>
                 );
             })}
@@ -81,8 +82,8 @@ const LoLRecord = () => {
         const { team_name, img } = team;
         return (
             <tr key={index}>
-                <td className={styles.rank}>{index + 1}</td>
-                <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
+                <Td className={styles.rank}>{index + 1}</Td>
+                <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
             </tr>
         );
     });
@@ -95,3 +96,12 @@ const LoLRecord = () => {
 }
 
 export default LoLRecord;
+
+const Td = styled.td`
+    position: relative;
+    vertical-align: middle;
+    height: 45px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0px 10px;
+`

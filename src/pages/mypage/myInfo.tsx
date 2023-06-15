@@ -92,7 +92,9 @@ const MyInfo = () => {
       const confirmed = window.confirm("정말 탈퇴하시겠습니까?");
       if (confirmed) {
         await handleWithdraw(); // UserInfoFetcher 컴포넌트에서 불러온 handleWithdraw 함수 실행
+        localStorage.removeItem("accessToken");
         navigate("/login");
+        window.location.reload();
       } else {
         console.log("탈퇴 취소");
       }

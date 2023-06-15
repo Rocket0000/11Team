@@ -1,20 +1,7 @@
-// tr {
-//   td {
-//     position: relative;
-//     vertical-align: middle;
-//     height: 45px;
-//     text-align: center;
-//     border-bottom: 1px solid #e5e5e5;
-//     padding: 0px 10px;
-//   }
-//   th {
-//     padding: 0 5px;
-//   }
-// }
-
 .tableHeader {
-  text-align: center;
-  color: inherit;
+    text-align: center;
+    color: inherit;
+    padding: 0 5px;
 }
 
 .tableHeaderTeam {
@@ -41,8 +28,9 @@
 }
 
 .teamImg {
-  width: 35px;
-  height: 35px;
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
 }
 
 .selected {

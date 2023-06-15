@@ -2,6 +2,7 @@ import React from 'react'
 import styles from '../../styles/Record.module.scss'
 import useRank from '../../hooks/useRank';
 import RecordPage from '../../pages/RecordPage';
+import styled from 'styled-components';
 
 const KboRecord = () => {
     const { reFetch, data } = useRank();
@@ -58,14 +59,14 @@ const KboRecord = () => {
 
                 return (
                     <tr key={team_name}>
-                        <td className={styles.rank}>{rank}</td>
-                        <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
-                        <td>{totalGames}</td>
-                        <td>{wins}</td>
-                        <td>{drawns}</td>
-                        <td>{losses}</td>
-                        <td className={styles.selected}>{winRate}</td>
-                        <td>{gameBehind}</td>
+                        <Td className={styles.rank}>{rank}</Td>
+                        <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
+                        <Td>{totalGames}</Td>
+                        <Td>{wins}</Td>
+                        <Td>{drawns}</Td>
+                        <Td>{losses}</Td>
+                        <Td className={styles.selected}>{winRate}</Td>
+                        <Td>{gameBehind}</Td>
                     </tr>
                 );
             })}
@@ -74,12 +75,11 @@ const KboRecord = () => {
 
     const teamDatas = sortedData.map((team, index) => {
         const { team_name, img } = team;
-        const teamNameSplit = team_name.split(' ')[0];
 
         return (
             <tr key={index}>
-                <td className={styles.rank}>{index + 1}</td>
-                <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{teamNameSplit}</span></td>
+                <Td className={styles.rank}>{index + 1}</Td>
+                <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
             </tr>
         );
     });
@@ -92,3 +92,12 @@ const KboRecord = () => {
 }
 
 export default KboRecord;
+
+const Td = styled.td`
+    position: relative;
+    vertical-align: middle;
+    height: 45px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0px 10px;
+`

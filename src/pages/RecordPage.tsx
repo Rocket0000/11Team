@@ -104,7 +104,7 @@ export default RecordPage;
 
 const Container = styled.div`
     position: relative;
-    padding: 0 162px 30px 162px;
+    padding: 30px 162px;
 
     @media (max-width: 1024px){
         padding: 30px 0;
@@ -160,7 +160,7 @@ const Col = styled.col`
     }
 
     &:nth-child(2) {
-        width: 150px;
+        width: 140px;
     }
 }
 `
@@ -192,7 +192,7 @@ const Tbody = styled.tbody`
 `
 
 const FirstTable = styled.div`
-    width: 190px;
+    width: 180px;
     position: absolute;
     top: 0;
     left: 0;

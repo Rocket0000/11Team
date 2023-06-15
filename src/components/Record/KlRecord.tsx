@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from '../../styles/Record.module.scss'
+import styled from "styled-components";
 import RecordPage from '../../pages/RecordPage';
 import useRank from '../../hooks/useRank';
 
@@ -59,16 +60,16 @@ const KlRecord = () => {
                 const goalDifference = scored - conceded;
                 return (
                     <tr key={team_name}>
-                        <td className={styles.rank}>{rank}</td>
-                        <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
-                        <td>{totalGames}</td>
-                        <td>{wins}</td>
-                        <td>{drawns}</td>
-                        <td>{losses}</td>
-                        <td>{scored}</td>
-                        <td>{conceded}</td>
-                        <td>{goalDifference}</td>
-                        <td className={styles.selected}>{points}</td>
+                        <Td className={styles.rank}>{rank}</Td>
+                        <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
+                        <Td>{totalGames}</Td>
+                        <Td>{wins}</Td>
+                        <Td>{drawns}</Td>
+                        <Td>{losses}</Td>
+                        <Td>{scored}</Td>
+                        <Td>{conceded}</Td>
+                        <Td>{goalDifference}</Td>
+                        <Td className={styles.selected}>{points}</Td>
                     </tr>
                 );
             })}
@@ -79,8 +80,8 @@ const KlRecord = () => {
         const { team_name, img } = team;
         return (
             <tr key={index}>
-                <td className={styles.rank}>{index + 1}</td>
-                <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
+                <Td className={styles.rank}>{index + 1}</Td>
+                <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
             </tr>
         );
     });
@@ -93,3 +94,12 @@ const KlRecord = () => {
 }
 
 export default KlRecord;
+
+const Td = styled.td`
+    position: relative;
+    vertical-align: middle;
+    height: 45px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0px 10px;
+`

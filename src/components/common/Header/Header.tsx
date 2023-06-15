@@ -22,7 +22,7 @@ const Header = () => {
 
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const [currentUser, setCurrentUser] = useState<CurrentUser | null>({
-        nickname: "",
+        nickname: '',
         img: '',
     });
 
@@ -30,25 +30,25 @@ const Header = () => {
 
     useEffect(() => {
         const getUserData = async () => {
-            if (token) {
-                try {
-                    const res = await axios.get(`${url}/user`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-                    const data = res.data.data;
-                    setCurrentUser({
-                        nickname: data.nickname,
-                        img: data.img,
-                    });
-                } catch (err) {
-                    console.error(err);
-                }
+          if (token) {
+            try {
+              const res = await axios.get(`${url}/user`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              const data = res.data.data;
+              setCurrentUser({
+                nickname: data.nickname,
+                img: data.img,
+              });
+            } catch (err) {
+              console.error(err);
             }
-        };
+          }
+        }
         getUserData();
-    }, [token]);
+      }, [token, setCurrentUser]);
 
 
     // 스크롤 이벤트 발생 시 실행. navbar가 상단에 닿으면 고정, 원래 위치로 돌아가면 해제
@@ -84,7 +84,7 @@ const Header = () => {
                     </NavLink>
                     {currentUser && token
                         ? isTablet
-                            ? <NavLink to="/mypage">
+                            ? <NavLink to="/mypage/MyWrite">
                                 <Button>마이페이지</Button>
                             </NavLink>
                             : <Profile currentUser={currentUser} />
@@ -157,7 +157,7 @@ const Logo = styled.div`
 `
 
 const LogoImg = styled.img`
-    width: 25px;
+    width: 32px;
     height: auto;
 
     @media (max-width: 1024px) {
@@ -168,7 +168,6 @@ const LogoImg = styled.img`
 const LogoText = styled.span`
     font-size: 20px;
     font-weight: bold;
-    padding-left: 5px;
 `
 
 const NavLink = styled(Link)`
