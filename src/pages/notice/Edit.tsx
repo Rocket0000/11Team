@@ -24,15 +24,18 @@ const Edit = () => {
   const navigation = useNavigate();
 
 
+  const [ dropDownNum, setDropDownNum ] = useState(0);
   const [ inputContent, setInputContent ] = useState('');
   const [ md, setMd ] = useState<string | undefined>('');
-  const [ dropDownNum, setDropDownNum ] = useState(0);
 
   const [ showCancelPopup, setShowCancelPopup ] = useState(false);
+  const [ allCategoryPopup, setAllCategoryPop ] = useState(false);
+  const [ emptyTitle, setEmptyTitle ] = useState(false);
+  const [ emptyContent, setEmptyContent ] = useState(false);
 
   const postAdd = async () => {
     try{
-      axios.post('http://localhost:5500/api/v1/post/',{
+      await axios.post('http://localhost:5500/api/v1/post/',{
         category: dropDownNum,
         title: inputContent,
         content: md
@@ -57,6 +60,15 @@ const Edit = () => {
   },[])
 
   const postAddHandler = () => {
+    if(dropDownNum === 4){
+      return setAllCategoryPop(true)
+    }
+    if(inputContent === ''){
+      return setEmptyTitle(true)
+    }
+    if(md === ''){
+      return setEmptyContent(true)
+    }
     postAdd()
   }
 
@@ -108,6 +120,36 @@ const Edit = () => {
         </BtnGroup>
         </SectionTag>
       </BoardBg>
+      <Popup
+        title="전체는 카테고리로 지정 할 수 없습니다."
+        count={1}
+        disabled={false}
+        content='확인'
+        firstBtn='base'
+        secondBtn="reportComment"
+        clickHandler={() => setAllCategoryPop(false)}
+        open={allCategoryPopup}
+      />
+      <Popup
+        title="제목은 필수 입니다."
+        count={1}
+        disabled={false}
+        content='확인'
+        firstBtn='base'
+        secondBtn="reportComment"
+        clickHandler={() => setEmptyTitle(false)}
+        open={emptyTitle}
+      />
+      <Popup
+        title="내용은 필수 입니다."
+        count={1}
+        disabled={false}
+        content='확인'
+        firstBtn='base'
+        secondBtn="reportComment"
+        clickHandler={() => setEmptyContent(false)}
+        open={emptyContent}
+      />
       <Popup
         title={`작성 하신 글 취소하면\n 저장되지 않습니다. \n그래도 취소 하시겠습니까?`}
         count={1}

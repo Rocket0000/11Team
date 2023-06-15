@@ -14,14 +14,14 @@ interface TrTypeProps{
   colSpan? : number;
   inputType?: string;
   inputValue?: string | any;
-
+  text?: string;
   tdContent? : object;//detail페이지에 들어갈 데이터
 
   setInput?: Dispatch<SetStateAction<string>> | any;
   setDropDown? : Dispatch<SetStateAction<string>> | any;
 }
 
-const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan,  inputType, inputValue, tdContent, setInput, setDropDown }) => {
+const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan,  inputType, inputValue, tdContent, setInput, setDropDown,text }) => {
 
   const thContent = thTitle.split(',');
 
@@ -62,6 +62,8 @@ const TrTag:React.FC<TrTypeProps> = ({ rowType, thTitle, trType, colSpan,  input
                                 return <Dropdown allCategory={true} purpose="middle" dropdownSelect={(category) => setDropDown(category)}/>;
                               case "input":
                                 return <Input type={inputType} value={inputValue} onChange={(e) => setInput(e)} />
+                              case "text":
+                                  return <p>{text}</p>
                               default:
                                 return <p>'error::: select 와 input 중 골라주세요'</p>;
                             }

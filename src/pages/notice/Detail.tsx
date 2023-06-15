@@ -83,7 +83,7 @@ const params = {contents_category: `${notice.category}`}
   
   const postComment = async() => {
     try{
-      await axios.post('http://localhost:5500/api/v1/comment/',{
+        await axios.post('http://localhost:5500/api/v1/comment/',{
         contents_category: 1,
         id: Number(getPostId[6]),
         content: `${comment}`
