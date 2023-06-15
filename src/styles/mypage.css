@@ -19,6 +19,11 @@ h2.pageTitle {
   font-size: 14px;
 }
 
+.myinfoTable tr {
+  margin-bottom: 20px;
+  display: block;
+}
+
 .myinfoTable th,
 .myinfoTable td {
   vertical-align: middle;
