@@ -194,8 +194,7 @@ const Container = styled.div`
 `;
 
 const ScheduleContentContainer = styled.div`
-  margin: 0 auto;
-  margin-top: 160px;
+  margin: 160px auto;
   width: calc(100vw - 324px);
   display: flex;
   flex-direction: column;

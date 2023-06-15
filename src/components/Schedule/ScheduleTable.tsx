@@ -157,6 +157,8 @@ const TableHeader = styled.th<{ isToday?: boolean }>`
 `;
 
 const TableRow = styled.tr`
+  height: 45px;
+
   &.bg {
     background-color: #fbfafe;
   }

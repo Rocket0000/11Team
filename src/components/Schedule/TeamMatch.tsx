@@ -53,7 +53,7 @@ const Container = styled.div`
 `;
 
 const Team = styled.div`
-  width: 100px;
+  width: 120px;
   display: flex;
   align-items: center;
 
