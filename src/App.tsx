@@ -26,6 +26,7 @@ import Detail from "./pages/notice/Detail";
 import Edit from "./pages/notice/Edit";
 import MypageDetail from "./pages/notice/MypageDetail";
 import Modify from "./pages/notice/Modify";
+import StadiumPage from "./pages/StadiumPage";
 
 function App() {
   return (
@@ -63,8 +64,8 @@ function App() {
           <Route path="/esport/notice" element={<List />} />
           <Route path="/esport/notice/edit" element={<Edit />} />
           <Route path="/esport/notice/detail/:id" element={<Detail />} />
-
           <Route path="/shorts" element={<Shorts />}></Route>
+          <Route path="/stadium" element={<StadiumPage />}></Route>
         </Routes>
         <Footer></Footer>
       </Router>

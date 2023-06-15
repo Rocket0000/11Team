@@ -28,6 +28,7 @@ export interface Schedule {
   score1: number;
   score2: number;
   state: string;
+  category: number;
 }
 
 const CATEGORY: { [key: string]: number } = {

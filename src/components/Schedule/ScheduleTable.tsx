@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 import {
   getDaysInMonthArr,
@@ -17,6 +18,7 @@ interface ScheduleTableProps {
 }
 
 const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
+  const navigate = useNavigate();
   const today = new Date();
 
   const tableRowClassNames = (idx: number, isToday: boolean) => {
@@ -73,7 +75,17 @@ const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
                   </TableHeader>
                 )}
                 <TableCell>{schedule.start_time.slice(0, 5)}</TableCell>
-                <TableCell className="location">{schedule.location}</TableCell>
+                <TableCell className="location">
+                  <span
+                    onClick={() => {
+                      navigate("/stadium", {
+                        state: { schedule: schedule },
+                      });
+                    }}
+                  >
+                    {schedule.location}
+                  </span>
+                </TableCell>
                 <TableCell>
                   <TeamMatch
                     team1={schedule.team1}
@@ -190,6 +202,11 @@ const TableCell = styled.td`
   font-size: 14px;
   &.location {
     color: #7c7b7b;
+
+    span:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 `;
 
