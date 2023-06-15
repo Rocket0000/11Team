@@ -130,6 +130,7 @@ const TdTag = styled.td`
 
   font-size: 16px;
   text-align: left;
+  vertical-align: middle;
   
   color: #323338;
 `;
