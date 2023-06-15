@@ -33,7 +33,7 @@ export interface Schedule {
 const CATEGORY: { [key: string]: number } = {
   soccer: 0,
   baseball: 1,
-  esports: 2,
+  esport: 2,
 };
 
 const SchedulePage = () => {
