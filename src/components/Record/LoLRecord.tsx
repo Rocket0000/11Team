@@ -2,6 +2,7 @@ import React from 'react'
 import styles from '../../styles/Record.module.scss'
 import RecordPage from '../../pages/RecordPage';
 import useRank from '../../hooks/useRank';
+import styled from "styled-components";
 
 const LoLRecord = () => {
     const { reFetch, data } = useRank();
@@ -12,15 +13,29 @@ const LoLRecord = () => {
         reFetch(newSeason);
     }
 
-    const headers = ['순위', '팀', '승', '패', '득실차', '승률'];
-    const headerElements = headers.map((header, index) => (
+    // 테이블 헤더 데이터
+    const teamHeaders = ['순위', '팀'];
+    const dataHeaders = ['승', '패', '득실차', '승률'];
+
+    const teamHeaderElements = teamHeaders.map((header, index) => (
         <th
             key={index}
-            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''} ${index === 2 ? styles.tableHeaderPoints : ''}`}
+            className={`${styles.tableHeader} ${index === 1 ? styles.tableHeaderTeam : ''}`}
         >
             {header}
         </th>
     ));
+
+    const dataHeaderElements = dataHeaders.map((header, index) => (
+        <th
+            key={index + teamHeaders.length}
+            className={`${styles.tableHeader} ${index === 3 ? styles.tableHeaderPoints : ''}`}
+        >
+            {header}
+        </th>
+    ));
+
+    const headers = [...teamHeaderElements, ...dataHeaderElements];
 
     // 롤 승률로 정렬
     const sortedData = [...data].sort((a, b) => {
@@ -51,22 +66,42 @@ const LoLRecord = () => {
 
                 return (
                     <tr key={team_name}>
-                        <td className={styles.rank}>{rank}</td>
-                        <td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></td>
-                        <td className={styles.selected}>{wins}</td>
-                        <td>{losses}</td>
-                        <td>{scoreDifference}</td>
-                        <td>{winRate}</td>
+                        <Td className={styles.rank}>{rank}</Td>
+                        <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
+                        <Td>{wins}</Td>
+                        <Td>{losses}</Td>
+                        <Td>{scoreDifference}</Td>
+                        <Td className={styles.selected}>{winRate}</Td>
                     </tr>
                 );
             })}
         </>
     );
+
+    const teamDatas = sortedData.map((team, index) => {
+        const { team_name, img } = team;
+        return (
+            <tr key={index}>
+                <Td className={styles.rank}>{index + 1}</Td>
+                <Td className={styles.team}><img className={styles.teamImg} src={img} alt="팀 로고" /><span>{team_name}</span></Td>
+            </tr>
+        );
+    });
+
     return (
         <div>
-            <RecordPage headerTitle={headerElements} tbodyData={datas} selectedSeasonCallback={handleSeasonChange} />
+            <RecordPage headerTitle={headers} teamHeaderElements={teamHeaderElements} tbodyData={datas} teamDatas={teamDatas} selectedSeasonCallback={handleSeasonChange} />
         </div>
     )
 }
 
 export default LoLRecord;
+
+const Td = styled.td`
+    position: relative;
+    vertical-align: middle;
+    height: 45px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0px 10px;
+`

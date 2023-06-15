@@ -3,45 +3,50 @@ import styled from "styled-components";
 import axios, { all } from "axios";
 
 import styles from "../../styles/main.module.scss";
-import rankData from "./Dummy/rankData.json";
-import teamData from "./Dummy/teamData.json";
-import category from "./Dummy/category.json";
-
-interface Team {
-  _id: string;
-  name: string;
-  category: number;
-  img: string;
-}
+import Dropdown, { getCategoryName } from "../common/Dropdown";
+import { Link } from "react-router-dom";
 
 interface Rank {
-  _id: string;
+  team_id: number;
   season: string;
   wins: number;
+  team_name: string;
   drawns: number;
   losses: number;
   winRate?: number;
-  team_id: number;
 }
 
 const RankBox = () => {
   const HEADER_LIST = ["순위", "팀명", "경기", "승", "패", "무", "승률"];
-  const [targetCatrgory, setTargetCatrgory] = useState(category[0]);
+  const [targetCatrgory, setTargetCatrgory] = useState(0);
   const [data, setData] = useState<Rank[]>([]);
 
-  //시즌별 팀 순위 받아옴
+  const dropdownSelect = (item: any) => {
+    setTargetCatrgory(item);
+  };
+
+  const sportsName = getCategoryName(targetCatrgory);
+
   const getRankData = async (category: any) => {
+    const season =
+      category == 0
+        ? `2023-K-League`
+        : category === 1
+        ? `2023-KBO`
+        : `2023-LCK-Spring`;
     try {
       const res = await axios.get(
-        `http://localhost:5500/api/v1/rank/1/2023 Season`
+        `http://localhost:5500/api/v1/rank/${category}/${season}`
       );
-      setData(res.data);
+      const targetData = res.data.data;
+      const sortData = getTeamsWithWinRate(targetData);
+      const cutData = sortData.slice(0, 5);
+      setData(cutData);
     } catch (error) {
       console.error("랭크데이터 불러오는거 실패함", error);
     }
   };
 
-  //승률변환 함수
   const calculateWinRate = (rank: Rank) => {
     const { wins, losses } = rank;
     const totalGames = wins + losses;
@@ -50,91 +55,53 @@ const RankBox = () => {
     return winRate.toFixed(2);
   };
 
-  //카테고리 인자로 받음, 해당하는 팀의 rankData를 찾아서 승률 삽입->정렬 후 반환
-  //api 연결시 -> targetData에 승률 삽입->정렬 후 반환
-  const getTeamsWithWinRate = (targetCatrgory: any) => {
-    const targetTeam = teamData.filter(
-      (team) => team.category === targetCatrgory._id
-    );
-
-    const teamIdsToFind = targetTeam.map((e) => Number(e._id));
-    const targetRanks = rankData.filter((item) =>
-      teamIdsToFind.includes(item.team_id)
-    );
-
-    // 팀별 승률 계산 및 정렬
-    const teamsWithWinRate = targetRanks.map((rank) => {
+  const getTeamsWithWinRate = (data: any) => {
+    const teamsWithWinRate = data.map((rank: any) => {
       const winRate = calculateWinRate(rank);
       return { ...rank, winRate };
     });
+
     // @ts-expect-error
-    teamsWithWinRate.sort((a, b) => b.winRate - a.winRate);
-    //정렬한거 자르는 코드 구현필요
-    return teamsWithWinRate;
+    const sortData = teamsWithWinRate.sort((a, b) => b.winRate - a.winRate);
+    return sortData;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    let targetId = Number(e.target.value);
-    return setTargetCatrgory(category[targetId]);
-  };
-
-  //페이지 로딩시 default category(=축구) 데이터 받아옴
   useEffect(() => {
-    setTargetCatrgory(category[0]);
-    const targetData = getTeamsWithWinRate(targetCatrgory);
-    // @ts-expect-error
-    setData(targetData);
-
-    // getRankData(0);
+    getRankData(targetCatrgory);
   }, []);
 
-  //카테고리 변경시 targetdata 변경
+  //카테고리 변경시 data 변경
   useEffect(() => {
-    const targetData = getTeamsWithWinRate(targetCatrgory);
-    const newData = [...targetData];
-    // @ts-expect-error
-    setData(newData);
-
-    //const targetData = getRankData(targetCatrgory)
-    //const sortData = getTeamsWithWinRate(targetData)
-    //setData(sortData);
+    getRankData(targetCatrgory);
   }, [targetCatrgory]);
-
-  console.log("data", data);
 
   return (
     <>
       <RankContainer>
-        <RankHeader>
-          <div className={styles.title}>경기 순위</div>
-          <select
-            onChange={(e) => {
-              handleChange(e);
-            }}
-          >
-            {category.map((item) => {
-              return (
-                <option key={item._id} value={item._id}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </select>
-        </RankHeader>
+        <Header>
+          <Link to={`/${sportsName.eng}/record`}>
+            <div className={styles.title}>경기 순위 {`> ${sportsName.kr}`}</div>
+          </Link>
+          <Dropdown purpose="small" dropdownSelect={dropdownSelect} />
+        </Header>
         <RankTable>
           <HeaderTr>
             {HEADER_LIST.map((item, index) => {
-              return <RankTh key={index}>{item}</RankTh>;
+              return item == "팀명" || item == "승률" ? (
+                <ThLa key={index}>{item}</ThLa>
+              ) : (
+                <ThSm key={index}>{item}</ThSm>
+              );
             })}
           </HeaderTr>
           {data.map((item, index) => {
             return (
-              <Tr key={item._id}>
+              <Tr
+                key={item.team_id}
+                className={index == 0 ? `${styles.numOne}` : ``}
+              >
                 <TdSm>{index + 1}</TdSm>
-                <TdLa>
-                  {item.team_id}
-                  {/*item.name*/}
-                </TdLa>
+                <TdLa>{item.team_name}</TdLa>
                 <TdSm>{item.wins + item.losses + item.drawns}</TdSm>
                 <TdSm>{item.wins}</TdSm>
                 <TdSm>{item.losses}</TdSm>
@@ -156,35 +123,41 @@ const RankContainer = styled.div`
   width: 400px;
   height: 298px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
   flex-direction: column;
   margin-top: 20px;
 `;
-const RankHeader = styled.div`
+
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
 `;
 const RankTable = styled.table`
-  displayl: flex;
+  display: flex;
   width: 360px;
-  height: 30px;
+  height: 550px;
   margin-left: auto;
   margin-right: auto;
+  flex-direction: column;
+  margin-top: 12px;
 `;
-const RankTh = styled.th`
+const ThLa = styled.th`
   font-size: 16px;
   font-weight: 400;
-  width: 50px;
+  width: 90px;
+`;
+const ThSm = styled.th`
+  font-size: 16px;
+  text-align: center;
+  width: 32px;
 `;
 const HeaderTr = styled.tr`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #a0a0a0;
   border-bottom: 1px solid #a0a0a0;
-  height: 31px;
+  height: 30px;
 `;
 const Tr = styled.tr`
   display: flex;
@@ -195,12 +168,12 @@ const Tr = styled.tr`
   border-bottom: 1px solid #d9d9d9;
 `;
 const TdSm = styled.td`
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
-  width: 44px;
+  width: 32px;
 `;
 const TdLa = styled.td`
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
-  width: 50px;
+  width: 90px;
 `;

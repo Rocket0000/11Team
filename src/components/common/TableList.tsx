@@ -1,20 +1,25 @@
-import React from "react";
+import React,{ useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import Pagination,{ PaginationProps } from "../../components/common/board/Pagination";
+import PopularBadge from "./board/PopularBadge";
+
+
 interface Post {
   id: number;
-  popular: boolean;
   title: string;
   content: string;
-  createdAt: Date;
-  author: string;
+  created_at: string;
+  nickname: string;
   views: number;
 }
 
-interface TableProps {
+interface TableProps extends PaginationProps{
   show: "all" | "my";
   data: Post[];
+  popularData?: Post[];
+  category?: string;
 }
 
 const TableWrapper = styled.table`
@@ -53,14 +58,18 @@ const TableCell = styled.td<{ width?: string }>`
   }
 `;
 
-const TableList: React.FC<TableProps> = ({ show, data }) => {
+const TableList: React.FC<TableProps> = ({ show, data, total, limit, page, setPage, popularData, category }) => {
+  const offset = (page - 1) * limit;
+  const myWriteLoction = window.location.href.split('/');
+
+  const pageName = myWriteLoction[3] + '/' + myWriteLoction[4];
+
   const renderTableHeader = () => {
     if (show === "all") {
       return (
         <TableHeader>
           <TableRow>
             <TableHeaderCell width="60px">번호</TableHeaderCell>
-            <TableHeaderCell width="80px">인기글</TableHeaderCell>
             <TableHeaderCell>제목</TableHeaderCell>
             <TableHeaderCell width="100px">등록일</TableHeaderCell>
             <TableHeaderCell width="100px">작성자</TableHeaderCell>
@@ -81,29 +90,69 @@ const TableList: React.FC<TableProps> = ({ show, data }) => {
       );
     }
   };
-
+     
   const renderTableRows = () => {
-    return data.map((post, index) => (
+
+    return data.slice(offset, offset + limit).map((post, index) => (
       <TableRow key={post.id} even={index % 2 === 1}>
         <TableCell width="80px">{post.id}</TableCell>
-        {show === "all" && (
-          <TableCell width="80px">{post.popular ? "인기글!" : ""}</TableCell>
-        )}
         <TableCell>
-          <Link to={`/post/${post.id}`}>{post.title}</Link>
+          <Link to={myWriteLoction[4] === 'MyWrite' ? `/MyWrite/notice/detail/${post.id}` :
+          `/${category}/notice/detail/${post.id}`}>{post.title}</Link>
         </TableCell>
-        <TableCell width="100px">{post.createdAt.toISOString()}</TableCell>
-        {show === "all" && <TableCell width="100px">{post.author}</TableCell>}
+        <TableCell width="100px">{post.created_at}</TableCell>
+        {show === "all" && <TableCell width="100px">{post.nickname}</TableCell>}
         <TableCell width="80px">{post.views}</TableCell>
       </TableRow>
     ));
   };
 
   return (
-    <TableWrapper>
-      {renderTableHeader()}
-      <tbody>{renderTableRows()}</tbody>
-    </TableWrapper>
+    <>
+      <TableWrapper>
+        {renderTableHeader()}
+        {
+           show === 'all' && (
+            <tbody>
+              {
+                popularData?.map((item, index) => {
+                  return(
+                    <TableRow key={index}>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>
+                        <div style={{display: 'flex', justifyContent:'flex-start', alignItems: 'center'}}>
+                          <PopularBadge></PopularBadge>
+                          <div>
+                            <Link to={`/${category}/notice/detail/${item.id}`}>{item.title}</Link>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{item.created_at}</TableCell>
+                      <TableCell>{item.nickname}</TableCell>
+                      <TableCell>{item.views}</TableCell>
+                    </TableRow>
+                  )
+                }) 
+              }
+            </tbody>
+          )
+        }
+        <tbody>{renderTableRows()}</tbody>
+        <tfoot>
+          <tr>
+           <td colSpan={6} style={{border: 0}}>
+             <Pagination 
+               total={total}
+               limit={limit}
+               page={page}
+               setPage={setPage}
+             />
+           </td>
+          </tr>
+        </tfoot>
+      </TableWrapper>
+
+    </>
   );
 };
 

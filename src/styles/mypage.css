@@ -1,0 +1,51 @@
+h2.pageTitle {
+  font-size: 26px;
+  color: #333;
+  font-weight: bold;
+  padding: 20px 0 30px 0px;
+}
+
+.mh500 {
+  min-height: 500px;
+}
+
+/* 내 정보 관련 */
+.myInfoDiv {
+  border-bottom: 1px solid #e3e3e3;
+  margin-bottom: 15px;
+}
+.myinfoTable {
+  text-align: left;
+  font-size: 14px;
+}
+
+.myinfoTable th,
+.myinfoTable td {
+  vertical-align: middle;
+}
+
+.myinfoTable th {
+  width: 150px;
+  color:#666;
+}
+
+.myinfoTable td {
+  width: auto;
+  border-bottom: 0;
+  text-align: left;
+}
+
+.myPostTable {
+    font-size: 14px;
+}
+
+.myPostTable a {
+    color:#333;
+    font-weight: bold;
+}
+
+.myPostTable th {
+    padding: 20px;
+    color:#8F90A6;
+    font-weight: bold;
+}

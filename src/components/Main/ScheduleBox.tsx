@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { format } from "date-fns";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import styles from "../../styles/main.module.scss";
 import DatePickerBox from "../common/DatePickerBox/DatePickerBox";
-import matchData from "./Dummy/matchData.json";
-import category from "./Dummy/category.json";
+import Dropdown from "../common/Dropdown";
+import { getCategoryName } from "../common/Dropdown";
 
 interface Team {
   _id: string;
@@ -33,42 +34,35 @@ interface Match {
   season: string;
 }
 
-const today = format(new Date(), "yyyy-MM-dd");
-const currentTime = format(new Date(), "hh:mm:ss");
+export const getCompareTime = (date: string, time: string): string => {
+  const todayDate = format(new Date(), "yyyy-MM-dd,HH:mm:ss");
+
+  if (todayDate < `${date},${time}`) return `${time.slice(0, 5)} 예정`;
+  return `경기 종료`;
+};
 
 // @ts-expect-error
 const MatchContainer = ({ categoryData }) => {
-  console.log("나 자식컴포넌트에서 전달받은 데이터야!", categoryData);
-
-  // @ts-expect-error
-  const compareTime = (time) => {
-    if (currentTime < time) {
-      return "종료";
-    } else if (currentTime === time) {
-      return "진행중";
-    } else return `${time.slice(0, 5)} 예정`;
-  };
-
   return (
     <>
       {categoryData.map((e: any) => {
         return (
           <MatchBox>
-            <LogoImg src={e.tema1_img} />
+            <ImgBox>
+              <LogoImg src={e.team1_img} />
+              <div>{e.team1}</div>
+            </ImgBox>
             <MatchData>
-              <div>
-                {categoryData.category === 0
-                  ? "츅구"
-                  : categoryData.category === 1
-                  ? "야구"
-                  : "e-스포츠"}
-              </div>
+              <div>{e.season}</div>
               <Vs>vs</Vs>
-              <State state={e.state}>
-                {today > e.start_day ? "종료" : compareTime(e.start_time)}
+              <State state={getCompareTime(e.start_date, e.start_time)}>
+                {getCompareTime(e.start_date, e.start_time)}
               </State>
             </MatchData>
-            <LogoImg src={e.tema2_img} />
+            <ImgBox>
+              <LogoImg src={e.team2_img} />
+              <div>{e.team2}</div>
+            </ImgBox>
           </MatchBox>
         );
       })}
@@ -76,50 +70,64 @@ const MatchContainer = ({ categoryData }) => {
   );
 };
 
+const LinkTitle = ({ sportsName }: any) => {
+  return (
+    <Link to={`/${sportsName.eng}/schedule`}>
+      <div className={styles.title}>{`경기 일정 > ${sportsName.kr}`}</div>
+    </Link>
+  );
+};
+
 const ScheduleBox = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectCategory, setSelectCategory] = useState<number>(0);
-  const [dateData, setDateData] = useState(matchData.data);
-  const [categoryData, setCategoryData] = useState(matchData.data);
+  const [selectCategory, setSelectCategory] = useState<number>(4);
+  const [dateData, setDateData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    let targetId = Number(e.target.value);
-    console.log(targetId);
-    return setSelectCategory(targetId);
+  const dropdownSelect = (category: any) => {
+    setSelectCategory(category);
   };
 
-  //날짜당 데이터 받아옴
-  // @ts-expect-error
-  const getSceduleData = async (date) => {
+  const sportsName = getCategoryName(selectCategory);
+
+  const getSceduleData = async (date: any) => {
+    const selectdate = format(date, "yyyy-MM-dd");
     try {
       const res = await axios.get(
-        `http://localhost:5500/api/v1/schedule/day/${date}`
+        `http://localhost:5500/api/v1/schedule/day/${selectdate}`
       );
-      setDateData(res.data);
+      setDateData(res.data.data);
     } catch (error) {
       console.error("경기순위 불러오는거 실패함", error);
     }
   };
 
-  //선택한 날짜가 바뀔 때 마다 날짜 데이터 받아와서 dateData 업데이트
   useEffect(() => {
     getSceduleData(selectedDate);
-    console.log(dateData);
+    setCategoryData(dateData);
+    setSelectCategory(4);
   }, [selectedDate]);
 
   useEffect(() => {
-    //선택한 카테고리가 바뀔 때 마다 categoryData 업데이트
+    if (selectCategory == 4) {
+      const newData = [...dateData];
+      const cutData = newData.slice(0, 4);
+      setCategoryData(cutData);
+    }
+  }, [dateData]);
 
-    //matchData.category === 선택한 카테고리와 같은걸 필터해서 newData에 담음
-    if (selectCategory < 3) {
-      const newData = dateData.filter(
-        (data) => data.category === selectCategory
-      );
-      console.log("newData", newData);
-      setCategoryData(newData);
-      console.log("categoryData", categoryData);
-    } else {
-      setCategoryData(dateData);
+  useEffect(() => {
+    if (selectCategory !== 4) {
+      // @ts-expect-error
+      const data = dateData.filter((data) => data.category === selectCategory);
+      const newData = [...data];
+      const cutData = newData.slice(0, 4);
+      setCategoryData(cutData);
+    }
+    if (selectCategory == 4) {
+      const newData = [...dateData];
+      const cutData = newData.slice(0, 4);
+      setCategoryData(cutData);
     }
   }, [selectCategory]);
 
@@ -127,20 +135,17 @@ const ScheduleBox = () => {
     <>
       <ScheduleContainer>
         <Header>
-          <div className={styles.title}>경기 일정</div>
-          <select
-            onChange={(e) => {
-              handleChange(e);
-            }}
-          >
-            {category.map((item) => {
-              return (
-                <option key={item._id} value={item._id}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </select>
+          {selectCategory === 4 ? (
+            <div className={styles.title}>경기 일정</div>
+          ) : (
+            <LinkTitle sportsName={sportsName} />
+          )}
+          <Dropdown
+            allCategory
+            purpose="small"
+            dropdownSelect={dropdownSelect}
+            selectCategory={selectCategory}
+          />
         </Header>
         <Body>
           <DateContainer>
@@ -165,7 +170,7 @@ const ScheduleContainer = styled.div`
   width: 390px;
   height: 540px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
 `;
 
@@ -177,7 +182,7 @@ const DateContainer = styled.div`
   width: 160px;
   height: 40px;
 `;
-const Header = styled.div`wi
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -202,7 +207,7 @@ const MatchBox = styled.div`
 const LogoImg = styled.img`
   width: 60px;
   height: 60px;
-  margin: 10px;
+  margin: 5px;
   border-radius: 100%;
 `;
 
@@ -225,10 +230,14 @@ const Vs = styled.div`
 
 const State = styled.div<{ state: string }>`
   font-size: 14px;
-  color: ${(props) =>
-    props.state == "종료"
-      ? "red"
-      : props.state == "예정"
-      ? "#8F6EEB"
-      : "#4EAF51"};
+  color: ${(props) => (props.state == "경기 종료" ? "red" : "#8F6EEB")};
+`;
+
+const ImgBox = styled.div`
+  display: flex;
+  width: 70px;
+  height: 96px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;

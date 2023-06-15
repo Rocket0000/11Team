@@ -3,7 +3,8 @@ import styled from "styled-components";
 import axios, { all } from "axios";
 
 import styles from "../../styles/main.module.scss";
-import communityData from "./Dummy/communityData.json";
+import { getCategoryName } from "../common/Dropdown";
+import { Link } from "react-router-dom";
 
 interface Data {
   id: number;
@@ -22,30 +23,78 @@ const TableHeader = () => {
   );
 };
 
+const LinkTitle = ({ sportsName }: any) => {
+  return (
+    <Link to={`/${sportsName.eng}/notice`}>
+      <div className={styles.linkTitle}>
+        {sportsName.kr} {sportsName.kr == "전체" ? `글` : `게시판`}
+      </div>
+    </Link>
+  );
+};
+
 // @ts-expect-error
-const BoardBox = ({ data }) => {
+const BoardBox = ({ category }) => {
+  const [boardData, setBoardData] = useState([]);
+
+  const sportsName = getCategoryName(category);
+
+  useEffect(() => {
+    const getBoardData = async (category?: any) => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5500/api/v1/post/main?category=${category}`
+        );
+        setBoardData(res.data.data);
+      } catch (error) {
+        console.error("게시판 불러오는거 실패함", error);
+      }
+    };
+    getBoardData(category);
+  }, []);
+
   return (
     <BoardContainer>
-      <BoardTitle>{data.category}</BoardTitle>
+      <BoardTitle>
+        {category == null ? (
+          <div>
+            {sportsName.kr} {sportsName.kr == "전체" ? `글` : `게시판`}
+          </div>
+        ) : (
+          <LinkTitle sportsName={sportsName} />
+        )}
+      </BoardTitle>
       <Table>
         <TableHeader />
-        <PostList data={data.data} />
+        <PostList data={boardData} category={category} />
       </Table>
     </BoardContainer>
   );
 };
 
 // @ts-expect-error
-const PostList = ({ data }) => {
+const PostList = ({ data, category }) => {
+  const categoryName = getCategoryName(category);
+
   return (
     <>
       {data.map((post: any) => {
+        const urlName =
+          categoryName.eng == `all`
+            ? getCategoryName(post.category).eng
+            : categoryName.eng;
         return (
-          <PostTr key={post.id}>
-            <Td>{post.id}</Td>
-            <PostTitle>{post.title}</PostTitle>
-            <Td>{post.views}</Td>
-          </PostTr>
+          <Link to={`/${urlName}/notice/detail/${post.id}`}>
+            <PostTr key={post.게시글ID}>
+              <Td>{post.id}</Td>
+              <PostTitle>
+                {post.title.length >= 30
+                  ? post.title.substr(0, 25) + `....`
+                  : post.title}
+              </PostTitle>
+              <Td>{post.views}</Td>
+            </PostTr>
+          </Link>
         );
       })}
     </>
@@ -53,40 +102,17 @@ const PostList = ({ data }) => {
 };
 
 const CommunityBox = () => {
-  const [boardData, setBoardData] = useState([]);
-
-  //메인 게시판 데이터 받아와서 communityData에 저장
-  const getBoardData = async () => {
-    try {
-      const res = await axios.get("http://localhost:5500/api/v1/post/main/1");
-      setBoardData(res.data);
-    } catch (error) {
-      console.error("게시판 불러오는거 실패함", error);
-    }
-  };
-  //
-
-  //페이지 로딩시 받아올 데이터
-  useEffect(() => {
-    getBoardData();
-  }, []);
-
-  //카테고리별로 들어옴
-  //allData soccerData baseballData eSportsData
-  const allData = communityData;
-
   return (
     <>
       <CommunityContainer>
         <div className={styles.title}>오늘의 커뮤니티</div>
         <Body>
-          {allData.map((category, index) => {
-            return (
-              <PostListContainer key={index}>
-                <BoardBox data={category} />
-              </PostListContainer>
-            );
-          })}
+          <PostListContainer>
+            <BoardBox category={null} />
+            <BoardBox category={0} />
+            <BoardBox category={1} />
+            <BoardBox category={2} />
+          </PostListContainer>
         </Body>
       </CommunityContainer>
     </>
@@ -101,7 +127,7 @@ const CommunityContainer = styled.div`
   width: 1190px;
   height: 625px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
   margin-top: 20px;
 `;
@@ -119,22 +145,28 @@ const Body = styled.div`
 const PostListContainer = styled.div`
   display: flex;
   flex-flow: column wrap;
-  width: 550px;
-  height: 250px;
+  width: 1190px;
+  height: 550px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: space-around;
+  justify-content: space-around;
 `;
 
 const BoardContainer = styled.div`
   flex-wrap: wrap;
+  flex-direction: row;
   width: 550px;
   height: 220px;
 `;
 
 const BoardTitle = styled.div`
   font-size: 18px;
-  width: 100px;
+  width: 150px;
   height: 35px;
   font-weight: 400;
   font-size: 18px;
+  color: #5546b7;
 `;
 
 const Table = styled.table`
@@ -154,7 +186,7 @@ const PostTr = styled.tr`
   justify-content: space-between;
   align-items: center;
   width: 530px;
-  height: 50px;
+  height: 40px;
   border-bottom: 1px solid #cccccc;
 `;
 

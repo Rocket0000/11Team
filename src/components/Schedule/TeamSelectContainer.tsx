@@ -35,7 +35,6 @@ const TeamContainer = styled.li<{ isSelected: boolean }>`
   align-items: center;
   border-radius: 10px;
   background-color: #fff;
-  margin-right: 22px;
   cursor: ${(props) => (props.isSelected ? "default" : "pointer")};
   border: ${(props) =>
     props.isSelected ? "2px solid #5F30E2" : "1px solid #B5B5B5"};

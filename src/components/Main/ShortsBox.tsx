@@ -1,30 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 import styles from "../../styles/main.module.scss";
-import shortsData from "./Dummy/shortsData.json";
-
-interface Data {
-  id: number;
-  user_id: number;
-  title: string;
-  category: number;
-  likes: number;
-  views: number;
-  src: string;
-  created_at: string;
-}
+import { Link } from "react-router-dom";
 
 // @ts-expect-error
 const VideoContainer = ({ data }) => {
   return (
     <>
-      {data.map((item: any) => {
+      {data.map((video: any) => {
         return (
-          <VideoBox>
-            <Video src={item.src} />
-            <VideoTitle>{item.title}</VideoTitle>
-          </VideoBox>
+          <Link to={`/shorts?id=${video.id}`}>
+            <VideoBox key={video.id}>
+              <Video src={video.src} />
+              <VideoTitle>{video.title}</VideoTitle>
+            </VideoBox>
+          </Link>
         );
       })}
     </>
@@ -32,17 +24,27 @@ const VideoContainer = ({ data }) => {
 };
 
 const ShortsBox = () => {
-  //데이터를 최신순으로 받아와서
-  //recentData에 저장
+  const [data, setData] = useState([]);
 
-  const recentData = shortsData;
+  useEffect(() => {
+    const getShortsData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5500/api/v1/shorts`);
+        const cutData = res.data.data.slice(0, 4);
+        setData(cutData);
+      } catch (error) {
+        console.error("비디오데이터 불러오는거 실패함", error);
+      }
+    };
+    getShortsData();
+  }, []);
 
   return (
     <>
       <ShortsContainer>
         <div className={styles.title}>쇼츠</div>
         <Body>
-          <VideoContainer data={recentData} />
+          <VideoContainer data={data} />
         </Body>
       </ShortsContainer>
     </>
@@ -57,7 +59,7 @@ const ShortsContainer = styled.div`
   width: 1205px;
   height: 540px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
 `;
 

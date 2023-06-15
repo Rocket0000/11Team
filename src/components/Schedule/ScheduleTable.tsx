@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 import {
   getDaysInMonthArr,
@@ -17,6 +18,7 @@ interface ScheduleTableProps {
 }
 
 const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
+  const navigate = useNavigate();
   const today = new Date();
 
   const tableRowClassNames = (idx: number, isToday: boolean) => {
@@ -58,6 +60,7 @@ const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
                 className={`${tableRowClassNames(rowIdx, isToday)} ${
                   idx === 0 ? "first" : ""
                 } ${idx === scheduleList.length - 1 ? "last" : ""}`}
+                data-date={format(new Date(year, month - 1, date), "yyyyMMdd")}
               >
                 {idx === 0 && (
                   <TableHeader
@@ -65,10 +68,6 @@ const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
                     className="date"
                     scope="row"
                     isToday={isToday}
-                    data-date={format(
-                      new Date(year, month - 1, date),
-                      "yyyyMMdd"
-                    )}
                   >
                     <span>
                       {formatDateForTable(`${year}-${month}-${date}`)}
@@ -76,7 +75,17 @@ const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
                   </TableHeader>
                 )}
                 <TableCell>{schedule.start_time.slice(0, 5)}</TableCell>
-                <TableCell className="location">{schedule.location}</TableCell>
+                <TableCell className="location">
+                  <span
+                    onClick={() => {
+                      navigate("/stadium", {
+                        state: { schedule: schedule },
+                      });
+                    }}
+                  >
+                    {schedule.location}
+                  </span>
+                </TableCell>
                 <TableCell>
                   <TeamMatch
                     team1={schedule.team1}
@@ -148,6 +157,8 @@ const TableHeader = styled.th<{ isToday?: boolean }>`
 `;
 
 const TableRow = styled.tr`
+  height: 45px;
+
   &.bg {
     background-color: #fbfafe;
   }
@@ -161,7 +172,7 @@ const TableRow = styled.tr`
     }
   }
   &.today {
-    border-right: 1px solid #5f30e2;
+    border: 1px solid #5f30e2;
   }
   &.today.first > td {
     border-top: 1px solid #5f30e2;
@@ -169,16 +180,35 @@ const TableRow = styled.tr`
   &.today.last > td {
     border-bottom: 1px solid #5f30e2;
   }
+  &.selected {
+    border: 1px solid red;
+    th {
+      border: 1px solid red;
+      border-right-color: #f3f3f3;
+    }
+  }
+  &.selected.first > td {
+    border-top: 1px solid red;
+  }
+  &.selected.last > td {
+    border-bottom: 1px solid red;
+  }
 `;
 
 const TableCell = styled.td`
   padding: 10px;
   border-top: 1px solid #f3f3f3;
+  border-bottom: none;
   text-align: center;
   vertical-align: middle;
   font-size: 14px;
   &.location {
     color: #7c7b7b;
+
+    span:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 `;
 

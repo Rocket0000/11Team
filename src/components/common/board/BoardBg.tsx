@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 
-export const BoardBg = styled.div<{margin: string}>`
-    width: 1638px;
+export const BoardBg = styled.section<{margin?: string, height?: string, width?: string}>`
+    width: ${ props => props.width};
+    height: ${ props => props.height };
     padding: 20px 0;
     margin: ${ props => props.margin}; //일단 보기 편해서 넣음 지울거임
     background-color: #FFF;

@@ -1,70 +1,92 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+import Button from "../../components/common/Button/Button";
 import TableList from "../../components/common/TableList";
-import Header from "../../components/common/Header/Header";
 
-import Button from "./../../components/common/Button/Button";
+import UserInfoFetcher from "./UserInfoFetcher";
+import MyInfo from "./myInfo";
 
-import dummyPosts from "./dummyPosts";
+import MyPostsPage from "./myPostsPage";
 
-function MyWrite() {
+const MyWrite = () => {
   const [nickname, setNickname] = useState("");
   const [favorite, setFavorite] = useState("");
+  const [profileImg, setProfileImg] = useState(""); // 프로필 이미지 상태 추가
+  const navigate = useNavigate();
+
+  const handleFetchSuccess = (userInfo: any) => {
+    setNickname(userInfo.nickname);
+    setFavorite(userInfo.favoriteSport);
+    const imgId = userInfo.img; // 유저의 이미지 ID
+    setProfileImg(`/images/profile${imgId}.png`); // 프로필 이미지 경로 설정
+  };
+
+  const handleFetchError = (error: any) => {
+    console.log("불러오기 실패", error);
+  };
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
+  
+    if (confirmLogout) {
+      localStorage.removeItem("accessToken");
+      alert("안녕히가세요!");
+      navigate("/login");
+      window.location.reload();
+    } else {
+      console.log("로그아웃 취소");
+    }
+  };
+  
 
   useEffect(() => {
-    // 로컬 스토리지에서 사용자 정보 가져오기
-    const storedUsers = localStorage.getItem("users");
-    if (storedUsers) {
-      const parsedUsers = JSON.parse(storedUsers);
-      // 가장 최근 회원 정보 가져오기
-      const latestUser = parsedUsers[parsedUsers.length - 1];
-      setNickname(latestUser.nickname);
-      setFavorite(latestUser.favorite);
+    const imgId = localStorage.getItem("profileImgId");
+    if (imgId) {
+      setProfileImg(`/images/profile${imgId}.png`);
     }
   }, []);
 
-  // 선호종목 매핑
-  interface FavoriteOptions {
-    [key: string]: string;
-  }
-  const favoriteOptions: FavoriteOptions = {
-    "0": "축구",
-    "1": "야구",
-    "2": "롤",
-  };
-
   return (
     <>
-      <Header />
       <StyledSection>
         <MyProfile>
-          <div className="profileImg"></div>
+          <div
+            className="profileImg"
+            style={{ backgroundImage: `url(${profileImg})` }}
+          ></div>
           <p className="nickname">{nickname}</p>
           <p className="favorite">
-            선호종목 : <span>{favoriteOptions[favorite]}</span>
+            선호종목 : <span>{favorite}</span>
           </p>
-          <Button
-            disabled={false}
-            purpose="base"
-            content="로그아웃"
-            // onClick={}
-          />
+          <div style={{ width: 100, height: "40px", margin: "0 auto" }}>
+            <Button
+              disabled={false}
+              purpose="base"
+              content="로그아웃"
+              onClick={handleLogout}
+            />
+          </div>
         </MyProfile>
         <MyContent>
           <TabMenu />
         </MyContent>
       </StyledSection>
+      <UserInfoFetcher
+        onSuccess={handleFetchSuccess}
+        onError={handleFetchError}
+      />
     </>
   );
-}
-
+};
 export default MyWrite;
 
-//마이페이지 공통
+//마이페이지 공통 스타일
 const StyledSection = styled.section`
   background-color: #fff;
   padding: 0px 162px;
-  margin: 0px auto;
+  margin: 30px auto;
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
@@ -76,11 +98,14 @@ const MyProfile = styled.div`
   margin-right: 50px;
 
   & > div.profileImg {
-    background-color: green;
+    border: 1px solid #eee;
     width: 150px;
     height: 150px;
     margin: 0px auto 15px auto;
     border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
   }
 
   p.nickname {
@@ -108,7 +133,6 @@ const MyContent = styled.div`
 
 //탭메뉴
 const TabMenuWrapper = styled.div``;
-
 const TabWrapper = styled.div`
   display: flex;
   border-bottom: 1px solid #e3e3e3;
@@ -162,8 +186,8 @@ const TabMenu: React.FC = () => {
         {activeTab === 0 && (
           <Tab label="Tab 1">
             <p>작성글 보기</p>
-            <TableList show="all" data={dummyPosts}/>
-            <TableList show="my" data={dummyPosts}/>
+            {/* <TableList show="all" data={dummyPosts} />
+            <TableList show="my" data={dummyPosts} /> */}
           </Tab>
         )}
         {activeTab === 1 && (
@@ -171,7 +195,11 @@ const TabMenu: React.FC = () => {
             <p>내 동영상</p>
           </Tab>
         )}
-        {activeTab === 2 && <Tab label="Tab 3">내정보</Tab>}
+        {activeTab === 2 && (
+          <Tab label="Tab 3">
+            <MyInfo />
+          </Tab>
+        )}
       </TabContentWrapper>
     </TabMenuWrapper>
   );

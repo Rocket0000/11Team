@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 interface ArrowButtonProps {
   size?: "small" | "middle" | "large";
   rotate: number;
+  onClick?: () => void;
 }
 
 const getSizeValue = (size?: "small" | "middle" | "large") => {
@@ -19,12 +20,12 @@ const getSizeValue = (size?: "small" | "middle" | "large") => {
   }
 };
 
-const ArrowButton: React.FC<ArrowButtonProps> = ({ size, rotate }) => {
+const ArrowButton: React.FC<ArrowButtonProps> = ({ size, rotate, onClick }) => {
   const width = getSizeValue(size);
   const height = getSizeValue(size);
 
   return (
-    <SvgCover width={width} height={height} rotate={rotate}>
+    <SvgCover width={width} height={height} rotate={rotate} onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"

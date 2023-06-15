@@ -15,7 +15,20 @@ interface Props {
   allCategory?: boolean;
   purpose: "small" | "middle" | "large";
   dropdownSelect: (selectedItem: Items | null) => void;
+  selectCategory?: number;
 }
+
+export const getCategoryName = (category: number) => {
+  const sportsName =
+    category == 0
+      ? { eng: `soccer`, kr: `축구` }
+      : category == 1
+      ? { eng: `baseball`, kr: `야구` }
+      : category == 2
+      ? { eng: `esport`, kr: `e-스포츠` }
+      : { eng: `all`, kr: `전체` };
+  return sportsName;
+};
 
 const Dropdown: React.FC<Props> = ({
   allCategory,
@@ -42,8 +55,7 @@ const Dropdown: React.FC<Props> = ({
           });
         }
         const newData = [...categoryData];
-        setCategory(newData);
-        console.log("category", category);
+        setCategory([...newData]);
       } catch (error) {
         console.error("카테고리 데이터 불러오는거 실패함", error);
       }
@@ -103,7 +115,8 @@ const StyledButton = styled("button")<{ purpose?: string }>(
   font-size: 0.875rem;
   box-sizing: border-box;
   min-height: calc(1.5em + 18px);
-  padding: 12px;
+  ${purpose === "small" ? `padding: 5px 12px 2px 12px;` : `padding: 12px;`}
+  ${purpose === "small" ? `margin: 10px 10px 0px 10px;` : `padding: 12px;`}
   border-radius: 4px;
   text-align: left;
   line-height: 1.5;
@@ -141,11 +154,12 @@ const StyledButton = styled("button")<{ purpose?: string }>(
 
   ${
     purpose === "small"
-      ? `min-width: 105px;`
+      ? `min-width: 95px;`
       : purpose === "middle"
       ? `min-width: 240px;`
       : `min-width: 304px;`
   }
+  ${purpose === "small" ? `height: 0.5px;` : `height: 50px;`}
   `
 );
 
