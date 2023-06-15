@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios, { all } from "axios";
 
 import styles from "../../styles/main.module.scss";
-import Dropdown, { getCategoryName } from "../common/Dropdown";
+import { getCategoryName } from "../common/Dropdown";
 import { Link } from "react-router-dom";
 
 interface Rank {
@@ -16,37 +16,13 @@ interface Rank {
   winRate?: number;
 }
 
-const RankBox = () => {
+const RankBox = ({ category }: { category: number }) => {
   const HEADER_LIST = ["순위", "팀명", "경기", "승", "패", "무", "승률"];
-  const [targetCatrgory, setTargetCatrgory] = useState(0);
   const [data, setData] = useState<Rank[]>([]);
 
-  const dropdownSelect = (item: any) => {
-    setTargetCatrgory(item);
-  };
+  const sportsName = getCategoryName(category);
 
-  const sportsName = getCategoryName(targetCatrgory);
-
-  const getRankData = async (category: any) => {
-    const season =
-      category == 0
-        ? `2023-K-League`
-        : category === 1
-        ? `2023-KBO`
-        : `2023-LCK-Spring`;
-    try {
-      const res = await axios.get(
-        `http://localhost:5500/api/v1/rank/${category}/${season}`
-      );
-      const targetData = res.data.data;
-      const sortData = getTeamsWithWinRate(targetData);
-      const cutData = sortData.slice(0, 5);
-      setData(cutData);
-    } catch (error) {
-      console.error("랭크데이터 불러오는거 실패함", error);
-    }
-  };
-
+  //승률변환 함수
   const calculateWinRate = (rank: Rank) => {
     const { wins, losses } = rank;
     const totalGames = wins + losses;
@@ -67,22 +43,35 @@ const RankBox = () => {
   };
 
   useEffect(() => {
-    getRankData(targetCatrgory);
+    const getRankData = async (category: any) => {
+      const season =
+        category == 0
+          ? `2023-K-League`
+          : category === 1
+          ? `2023-KBO`
+          : `2023-LCK-Spring`;
+      try {
+        const res = await axios.get(
+          `http://localhost:5500/api/v1/rank/${category}/${season}`
+        );
+        const targetData = res.data.data;
+        const sortData = getTeamsWithWinRate(targetData);
+        const data = sortData.slice(0, 12);
+        setData(data);
+      } catch (error) {
+        console.error("랭크데이터 불러오는거 실패함", error);
+      }
+    };
+    getRankData(category);
   }, []);
-
-  //카테고리 변경시 data 변경
-  useEffect(() => {
-    getRankData(targetCatrgory);
-  }, [targetCatrgory]);
 
   return (
     <>
       <RankContainer>
         <Header>
           <Link to={`/${sportsName.eng}/record`}>
-            <div className={styles.title}>경기 순위 {`> ${sportsName.kr}`}</div>
+            <div className={styles.title}>{`경기 순위 > ${sportsName.kr}`}</div>
           </Link>
-          <Dropdown purpose="small" dropdownSelect={dropdownSelect} />
         </Header>
         <RankTable>
           <HeaderTr>
@@ -121,7 +110,7 @@ export default RankBox;
 const RankContainer = styled.div`
   display: flex;
   width: 400px;
-  height: 298px;
+  height: 550px;
   background: #ffffff;
   border: 2.5px solid #d9d9d9;
   border-radius: 20px;

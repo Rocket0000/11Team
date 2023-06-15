@@ -11,3 +11,24 @@
   font-size: 16px;
   font-weight: 400;
 }
+
+.body {
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  padding: 25px;
+  flex-wrap: wrap;
+  width: 1642px;
+}
+
+.numOne {
+  color: #5f30e2;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+a {
+  color: black;
+  margin: 0px;
+  padding: 0px;
+}

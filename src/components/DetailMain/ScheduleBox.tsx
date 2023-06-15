@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { format } from "date-fns";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 import styles from "../../styles/main.module.scss";
 import DatePickerBox from "../common/DatePickerBox/DatePickerBox";
-import Dropdown from "../common/Dropdown";
 import { getCategoryName } from "../common/Dropdown";
+import { Link } from "react-router-dom";
+import { getCompareTime } from "../Main/ScheduleBox";
 
 interface Team {
   _id: string;
@@ -33,13 +33,6 @@ interface Match {
   state: string;
   season: string;
 }
-
-export const getCompareTime = (date: string, time: string): string => {
-  const todayDate = format(new Date(), "yyyy-MM-dd,HH:mm:ss");
-
-  if (todayDate < `${date},${time}`) return `${time.slice(0, 5)} 예정`;
-  return `경기 종료`;
-};
 
 // @ts-expect-error
 const MatchContainer = ({ categoryData }) => {
@@ -70,82 +63,38 @@ const MatchContainer = ({ categoryData }) => {
   );
 };
 
-const LinkTitle = ({ sportsName }: any) => {
-  return (
-    <Link to={`/${sportsName.eng}/schedule`}>
-      <div className={styles.title}>{`경기 일정 > ${sportsName.kr}`}</div>
-    </Link>
-  );
-};
-
-const ScheduleBox = () => {
+const ScheduleBox = ({ category }: { category: number }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectCategory, setSelectCategory] = useState<number>(4);
   const [dateData, setDateData] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
 
-  const dropdownSelect = (category: any) => {
-    setSelectCategory(category);
-  };
-
-  const sportsName = getCategoryName(selectCategory);
-
-  const getSceduleData = async (date: any) => {
-    const selectdate = format(date, "yyyy-MM-dd");
-    try {
-      const res = await axios.get(
-        `http://localhost:5500/api/v1/schedule/day/${selectdate}`
-      );
-      setDateData(res.data.data);
-    } catch (error) {
-      console.error("경기순위 불러오는거 실패함", error);
-    }
-  };
+  const sportsName = getCategoryName(category);
 
   useEffect(() => {
+    const getSceduleData = async (date: any) => {
+      const selectdate = format(date, "yyyy-MM-dd");
+      try {
+        const res = await axios.get(
+          `http://localhost:5500/api/v1/schedule/day/${selectdate}`
+        );
+        const newData = res.data.data.filter(
+          (data: { category: number }) => data.category === category
+        );
+        const cutData = newData.slice(0, 4);
+        setDateData(cutData);
+      } catch (error) {
+        console.error("경기순위 불러오는거 실패함", error);
+      }
+    };
     getSceduleData(selectedDate);
-    setCategoryData(dateData);
-    setSelectCategory(4);
   }, [selectedDate]);
-
-  useEffect(() => {
-    if (selectCategory == 4) {
-      const newData = [...dateData];
-      const cutData = newData.slice(0, 4);
-      setCategoryData(cutData);
-    }
-  }, [dateData]);
-
-  useEffect(() => {
-    if (selectCategory !== 4) {
-      // @ts-expect-error
-      const data = dateData.filter((data) => data.category === selectCategory);
-      const newData = [...data];
-      const cutData = newData.slice(0, 4);
-      setCategoryData(cutData);
-    }
-    if (selectCategory == 4) {
-      const newData = [...dateData];
-      const cutData = newData.slice(0, 4);
-      setCategoryData(cutData);
-    }
-  }, [selectCategory]);
 
   return (
     <>
       <ScheduleContainer>
         <Header>
-          {selectCategory === 4 ? (
-            <div className={styles.title}>경기 일정</div>
-          ) : (
-            <LinkTitle sportsName={sportsName} />
-          )}
-          <Dropdown
-            allCategory
-            purpose="small"
-            dropdownSelect={dropdownSelect}
-            selectCategory={selectCategory}
-          />
+          <Link to={`/${sportsName.eng}/schedule`}>
+            <div className={styles.title}>경기 일정 {`> ${sportsName.kr}`}</div>
+          </Link>
         </Header>
         <Body>
           <DateContainer>
@@ -155,7 +104,7 @@ const ScheduleBox = () => {
               selectedDate={selectedDate}
             />
           </DateContainer>
-          <MatchContainer categoryData={categoryData} />
+          <MatchContainer categoryData={dateData} />
         </Body>
       </ScheduleContainer>
     </>
@@ -184,7 +133,7 @@ const DateContainer = styled.div`
 `;
 const Header = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
 const Body = styled.div`
