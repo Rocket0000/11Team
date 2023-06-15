@@ -76,10 +76,7 @@ const SchedulePage = () => {
   }, []);
 
   useEffect(() => {
-    const dateString = `${selectedDate.getFullYear()}${(
-      "0" +
-      (selectedDate.getMonth() + 1)
-    ).slice(-2)}`;
+    const dateString = format(selectedDate, "yyyyMM");
 
     // 날짜별 일정 가져오기
     const getScheduleData = async () => {
@@ -125,12 +122,25 @@ const SchedulePage = () => {
 
   useEffect(() => {
     const scrollToSelectedDate = () => {
-      const target = document.querySelector(
+      // 이전에 선택된 날짜가 있으면 selected 클래스 제거
+      const prevSelectedList = document.querySelectorAll(".selected");
+      if (prevSelectedList) {
+        prevSelectedList.forEach((prevSelected) => {
+          prevSelected.classList.remove("selected");
+        });
+      }
+
+      const selectedList = document.querySelectorAll(
         `[data-date="${format(selectedDate, "yyyyMMdd")}"]`
       );
 
-      if (target) {
-        target.scrollIntoView({
+      if (selectedList.length > 0) {
+        // 선택된 날짜에 selected 클래스 추가
+        selectedList.forEach((target) => {
+          target.classList.add("selected");
+        });
+
+        selectedList[0].scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
@@ -161,7 +171,7 @@ const SchedulePage = () => {
             teamList={teamList}
             selectedTeam={selectedTeamId}
             onSelect={onSelect}
-            category={1}
+            category={CATEGORY[sports]}
           />
         </ListContainer>
 
@@ -178,8 +188,6 @@ const SchedulePage = () => {
 export default SchedulePage;
 
 const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
 `;
@@ -191,6 +199,10 @@ const ScheduleContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const DateSelectContainer = styled.div`
@@ -210,4 +222,8 @@ const ListContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;

@@ -58,6 +58,7 @@ const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
                 className={`${tableRowClassNames(rowIdx, isToday)} ${
                   idx === 0 ? "first" : ""
                 } ${idx === scheduleList.length - 1 ? "last" : ""}`}
+                data-date={format(new Date(year, month - 1, date), "yyyyMMdd")}
               >
                 {idx === 0 && (
                   <TableHeader
@@ -65,10 +66,6 @@ const ScheduleTable = ({ year, month, scheduleData }: ScheduleTableProps) => {
                     className="date"
                     scope="row"
                     isToday={isToday}
-                    data-date={format(
-                      new Date(year, month - 1, date),
-                      "yyyyMMdd"
-                    )}
                   >
                     <span>
                       {formatDateForTable(`${year}-${month}-${date}`)}
@@ -161,7 +158,7 @@ const TableRow = styled.tr`
     }
   }
   &.today {
-    border-right: 1px solid #5f30e2;
+    border: 1px solid #5f30e2;
   }
   &.today.first > td {
     border-top: 1px solid #5f30e2;
@@ -169,11 +166,25 @@ const TableRow = styled.tr`
   &.today.last > td {
     border-bottom: 1px solid #5f30e2;
   }
+  &.selected {
+    border: 1px solid red;
+    th {
+      border: 1px solid red;
+      border-right-color: #f3f3f3;
+    }
+  }
+  &.selected.first > td {
+    border-top: 1px solid red;
+  }
+  &.selected.last > td {
+    border-bottom: 1px solid red;
+  }
 `;
 
 const TableCell = styled.td`
   padding: 10px;
   border-top: 1px solid #f3f3f3;
+  border-bottom: none;
   text-align: center;
   vertical-align: middle;
   font-size: 14px;

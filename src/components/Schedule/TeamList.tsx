@@ -30,14 +30,14 @@ const TeamList = ({
     slidesToShow: teamList.length > 6 ? 6 : teamList.length + 1,
     slidesToScroll: teamList.length > 6 ? 6 : teamList.length + 1,
     prevArrow: (
-      <PrevButton onClick={() => slickRef.current?.slickPrev()}>
+      <Button onClick={() => slickRef.current?.slickPrev()}>
         <ArrowButton size="small" rotate={180} />
-      </PrevButton>
+      </Button>
     ),
     nextArrow: (
-      <NextButton onClick={() => slickRef.current?.slickNext()}>
+      <Button onClick={() => slickRef.current?.slickNext()}>
         <ArrowButton size="small" rotate={0} />
-      </NextButton>
+      </Button>
     ),
     variableWidth: true,
     responsive: [
@@ -56,7 +56,7 @@ const TeamList = ({
         },
       },
       {
-        breakpoint: 750,
+        breakpoint: 760,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
@@ -72,10 +72,26 @@ const TeamList = ({
     ],
   };
 
+  const getImgSrc = (category: number) => {
+    switch (category) {
+      case 0:
+        return "kleague";
+      case 1:
+        return "kbo";
+      case 2:
+        return "lck";
+    }
+  };
+
   return (
     <StyledSlider {...settings} ref={slickRef}>
       <TeamSelectContainer
-        team={{ id: 0, name: "전체", category: category, img: "" }}
+        team={{
+          id: 0,
+          name: "전체",
+          category: category,
+          img: `/images/${getImgSrc(category)}.png`,
+        }}
         isSelected={selectedTeam === 0}
         onSelect={onSelect}
       />
@@ -95,23 +111,38 @@ export default TeamList;
 
 const StyledSlider = styled(Slider)`
   width: 100%;
+
   .slick-prev:before,
   .slick-next:before {
     content: "";
   }
+
   .slick-track {
     margin: 0;
   }
+
+  .slick-slide {
+    margin-right: 22px;
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    content: "";
+    background-image: linear-gradient(270deg, #fff, hsla(0, 0%, 100%, 0));
+  }
+
+  &::after {
+    right: 0;
+  }
 `;
 
-const PrevButton = styled.button`
+const Button = styled.button`
   position: absolute;
-  background: none;
-  border: none;
-`;
 
-const NextButton = styled.button`
-  position: absolute;
-  background: none;
-  border: none;
+  &.slick-disabled {
+    opacity: 0;
+  }
 `;
