@@ -44,14 +44,12 @@ const LoginPage: React.FC = () => {
       .post("http://localhost:5500/api/v1/auth/logIn", { email, password })
       .then((response) => {
         // 로그인 성공
-        const token = response.data.data.userToken.accessToken;
-        console.log(response.data); //확인용
-        console.log("토큰 값 확인:", token); //확인용
+        const accessToken = response.data.data.userToken.accessToken;
+        const refreshToken = response.data.data.userToken.refreshToken;
 
-        if (token) {
-          // 토큰 값 로컬스토리지에 저장
-          localStorage.setItem("accessToken", token);
-          console.log("토큰이 로컬스토리지에 저장되었습니다.");
+        if (accessToken && refreshToken) {
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
         } else {
           //토큰값 없으면
           console.log("토큰 값이 없습니다.");

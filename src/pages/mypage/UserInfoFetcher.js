@@ -10,18 +10,19 @@ const UserInfoFetcher = ({ onSuccess, onError }) => {
   }, []);
 
   const fetchUserInfo = () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!accessToken || !refreshToken) {
       throw new Error("토큰이 존재하지 않습니다.");
     }
-    const decodedToken = parseJwt(token);
-    if (!decodedToken || !decodedToken.user_id) {
+
+    const decodedAccessToken = parseJwt(accessToken);
+    if (!decodedAccessToken || !decodedAccessToken.user_id) {
       throw new Error("유저 아이디를 찾을 수 없습니다.");
     }
-    const userId = decodedToken.user_id;
-    //console.log("유저 아이디:", userId); //확인용
-    console.log("유저 이미지:: ");
-    //console.log("유저 토큰:", token); //확인용
+
+    const userId = decodedAccessToken.user_id;
 
     //선호종목 매칭
     const favoriteOptions = {
@@ -33,7 +34,8 @@ const UserInfoFetcher = ({ onSuccess, onError }) => {
     axios
       .get(`${BASE_URL}/api/v1/user`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
+          "x-refresh-token": refreshToken,
         },
       })
       .then((response) => {
@@ -47,6 +49,9 @@ const UserInfoFetcher = ({ onSuccess, onError }) => {
           img: data.img,
         };
         console.log("유저 이미지 id::", userInfo.img);
+        if (!localStorage.getItem("refreshToken")) {
+          localStorage.setItem("refreshToken", refreshToken);
+        }
         onSuccess(userInfo);
       })
       .catch((error) => {
