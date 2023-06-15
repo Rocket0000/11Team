@@ -61,6 +61,7 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/react-datepicker": "^4.11.2",
     "@types/react-slick": "^0.23.10",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "react-icons": "^4.9.0"
   }
 }

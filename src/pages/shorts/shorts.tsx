@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+
+import { BsFillChatLeftDotsFill } from "react-icons/bs";
 
 import Image from "../../components/common/Image";
 import ArrowButton from "../../components/common/Button/ArrowButton";
@@ -9,90 +10,97 @@ import Input from "../../components/common/Input";
 import Button from "../../components/common/Button/Button";
 import Comment from "../../components/common/Comment";
 
-interface CurShorts {
+interface CommentType {
+  comment_id: number;
+  user_id: number;
+  img: string;
+  nickname: string;
+  content: string;
+  created_at: string;
+}
+
+interface ShortsType {
   id: number;
   title: string;
   views: number;
   src: string;
-  // 카테고리가 어떤 값으로 오는지 한번 더 체크
   category: number;
 }
 
-// Comment 컴포넌트의 타입과 완전히 같은데 불러오는 방법 찾아보기???
-interface CommentType {
-  alt: string;
-  img: string;
-  nickname: string;
-  info: string;
-  date: string;
-  userId: number;
-  localSaveUserId: number;
-  clickHandler: () => void;
+interface ShortsPropsType {
+  id?: number | null | undefined;
+  category?: number | null;
 }
 
-interface ShortsListType {
-  id: number;
-  title: string;
-  src: string;
-  user_img: string;
-  nickname: string;
-  views: number;
-}
+// 서버에 데이터를 받아올 때 이미 존재하는 id이면 다시 받아오도록
+const Shorts: React.FC<ShortsPropsType> = ({ id, category }) => {
+  const localSaveUserId = localStorage.getItem("userId");
+  const parsedUserId = localSaveUserId ? parseInt(localSaveUserId) : 0;
 
-const Shorts: React.FC = () => {
-  // 이전 페이지에서 category 값을 전달받아서 어디 카테고리에서 온 지 확인해 데이터를 불러온다.
-  const location = useLocation();
-  const previousCategory = location.state?.category;
-
-  const [curShorts, setCurShorts] = useState<any>();
+  const [curShorts, setCurShorts] = useState<ShortsType>();
   const [loading, setLoading] = useState(true);
-  const [shortsList, setShortsList] = useState([]);
+  const [shortsList, setShortsList] = useState<number[]>([]);
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [commentsCount, setCommentsCount] = useState();
   const [input, setInput] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [index, setIndex] = useState(0);
 
-  // 최신순 불러오는 함수
-  const getShortsList = async (category?: string) => {
+  const getFirstShorts = async (
+    id?: number | undefined | null,
+    category?: number | undefined | null
+  ) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5500/api/v1/shorts?category=${
-          category ? encodeURIComponent(category) : ""
-        }`
-      );
-      const shorts = response.data;
-      setShortsList(shorts);
-      return shorts;
+      let url = `http://localhost:5500/api/v1/shorts/${
+        id !== undefined ? "detail" : "category/detail"
+      }`;
+
+      console.log(url);
+      console.log("category", category);
+      const response = await axios.get(url, {
+        params: {
+          shorts_id: id !== undefined ? id : null,
+          category: category !== undefined ? category : null,
+        },
+      });
+      const shorts = response.data.detail;
+      const shortsList = response.data.lists;
+      console.log(shortsList);
+
+      setCurShorts(shorts);
+      setShortsList(shortsList);
     } catch (error) {
       console.error("Error fetching shorts:", error);
     }
   };
 
-  // 쇼츠 하나만 불러오는 함수
-  const getShorts = async (shortsId: number) => {
+  // 쇼츠를 불러오는 함수
+  const getShorts = async (shorts_id?: number) => {
     try {
-      const response = await axios.get(`http://localhost:5500/api/v1/shorts`, {
-        params: {
-          shortsId,
-        },
-      });
-      const shorts = response.data;
+      console.log("shorts_id", shorts_id);
+      const response = await axios.get(
+        `http://localhost:5500/api/v1/shorts/detail/${shorts_id}`
+      );
+      const shorts = response.data.detail;
+      console.log(shorts);
+
       setCurShorts(shorts);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching shorts:", error);
+    }
   };
 
-  // shorts에 해당하는 댓글을 가져오는 함수
+  // shortsId에 해당하는 댓글을 가져오는 함수
   const getComments = async (shortsId: number) => {
     try {
-      // ?shorts의 id는 어떻게 받을 것인가? query? 아니면 path?
       const response = await axios.get(
-        `http://localhost:5500/api/v1/comment/list`,
+        `http://localhost:5500/api/v1/comment/list/${shortsId}`,
         {
           params: {
-            shortsId,
+            contents_category: 0,
           },
         }
       );
-      const comments = response.data;
+      const comments = response.data.data;
       setComments(comments);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -100,18 +108,38 @@ const Shorts: React.FC = () => {
   };
 
   // 이전 쇼츠를 가져오는 함수
-  const preImage = () => {};
+  const preShorts = () => {
+    let newIndex = 0;
+    if (index <= 0) {
+      newIndex = shortsList.length - 1;
+    } else {
+      newIndex = index - 1;
+    }
+    setIndex(newIndex);
+
+    const shortsId = shortsList[newIndex];
+
+    getShorts(shortsId);
+  };
 
   // 다음 쇼츠를 가져오는 함수
-  const nextImage = () => {};
+  const nextShorts = () => {
+    let newIndex = 0;
+    if (index >= shortsList.length - 1) {
+      newIndex = 0;
+    } else {
+      newIndex = index + 1;
+    }
+    setIndex(newIndex);
+
+    const shortsId = shortsList[newIndex];
+    getShorts(shortsId);
+  };
 
   // input 핸들러
   const handleInputChange = (value: string) => {
     setInput(value);
   };
-
-  // 신고냐 삭제냐 로직
-  const handle = () => {};
 
   // 버튼을 클릭하면 input 값을 가지고 댓글 등록하는 로직 작성
   const handleComment = async () => {
@@ -121,59 +149,59 @@ const Shorts: React.FC = () => {
         throw new Error("No current shorts available");
       }
 
-      const response = await axios.post(
-        `http://localhost:5500/api/v1/comment`,
-        {
-          content_category: curShorts.category,
-          id: curShorts.id,
-          content: input,
-        }
+      const token = localStorage.getItem("accessToken");
+
+      const requestBody = {
+        contents_category: 0,
+        id: curShorts.id,
+        content: input,
+      };
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await axios.post(
+        `http://localhost:5500/api/v1/comment/`,
+        requestBody,
+        config
       );
-      const responseData = response.data;
+
+      setInput("");
+
+      getComments(curShorts.id);
     } catch (error) {
       console.error("Error submitting comment: ", error);
     }
   };
 
   useEffect(() => {
-    // curImage가 존재하면 현재 이미지의 id를 넘긴다.
+    setLoading(true);
+
+    const fetchShorts = async () => {
+      await getFirstShorts(id, category);
+
+      setLoading(false);
+    };
+
+    fetchShorts();
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
 
     if (curShorts) {
       getComments(curShorts.id);
-    } else {
-      if (previousCategory) {
-        getShortsList(previousCategory)
-          .then((shorts) => {
-            console.log(shorts);
-            if (shorts.length > 0) {
-              const firstShortsId = shorts[0].id;
-              getShorts(firstShortsId);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching shorts:", error);
-          });
-      } else {
-        getShortsList()
-          .then((shorts) => {
-            if (shorts.length > 0) {
-              const firstShortsId = shorts[0].id;
-              getShorts(firstShortsId);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching shorts:", error);
-          });
-      }
     }
 
     setLoading(false);
-  }, [curShorts, previousCategory]);
+  }, [curShorts]);
 
   return (
     <ShortsContainer>
-      <ArrowButton rotate={180}></ArrowButton>
+      <ArrowButton rotate={180} onClick={preShorts}></ArrowButton>
       <StyledShort>
         {loading ? ( // Render "Loading..." when loading state is true
           <p>Loading...</p>
@@ -181,44 +209,43 @@ const Shorts: React.FC = () => {
           curShorts && (
             <ImageCover>
               <Image src={curShorts.src} alt={"쇼츠입니다."}></Image>
+
+              <ShortsButton onClick={() => setModalOpen(true)}>
+                <CommentsButton />
+              </ShortsButton>
             </ImageCover>
           )
         )}
       </StyledShort>
 
+      {modalOpen && ( // 모달 창이 열려있을 때에만 Modal 컴포넌트를 렌더링합니다.
+        <Modal>
+          <CommentCover onClick={() => setModalOpen(false)}>
+            <Comment data={comments} localSaveUserId={parsedUserId}></Comment>
+          </CommentCover>
+          <InputCover>
+            <InputContainer>
+              <Input value={input} onChange={handleInputChange} />
+            </InputContainer>
+            <ButtonContainer>
+              <Button
+                disabled={false}
+                purpose="base"
+                content="댓글"
+                onClick={handleComment}
+              ></Button>
+            </ButtonContainer>
+          </InputCover>
+        </Modal>
+      )}
+
       <StyledComment>
         <CommentsHeader>
           <CommentsTitle>댓글</CommentsTitle>
-          <CommentsCount>3{commentsCount}</CommentsCount>
+          <CommentsCount>{comments.length}</CommentsCount>
         </CommentsHeader>
         <CommentCover>
-          <Comment
-            alt="user"
-            img="https://cdn.pixabay.com/photo/2023/05/28/13/15/helicopter-8023696_640.jpg"
-            nickname="user"
-            info="댓글에는 이런 내용이 들어갈 예정입니다 확ㅇ"
-            date="2023-06-09"
-            localSaveUserId={0}
-            userId={0}
-            clickHandler={handle}
-          ></Comment>
-
-          {/* 닫는 버튼(이건 크기에 따라 달라졌을 때 추가되는 걸로) */}
-          {/* {comments.map((comment) => (
-            <Comment
-              alt={comment.user.nickname}
-              img={comment.user.img}
-              nickname={comment.user.nickname}
-              info={comment.content}
-              date={comment.date}
-              localSaveUserId={현재 유저의 id}
-              userId={comment.user.id}
-              clickHandler={"삭제하기"나 "신고하기" 이벤트}
-            />
-          ))} */}
-          {/* 댓글들
-          // 댓글 => 전달받은 댓글 갯수만큼 댓글 컴포넌트에 담아 작성
-        */}
+          <Comment data={comments} localSaveUserId={parsedUserId}></Comment>
         </CommentCover>
         <InputCover>
           <InputContainer>
@@ -234,7 +261,7 @@ const Shorts: React.FC = () => {
           </ButtonContainer>
         </InputCover>
       </StyledComment>
-      <ArrowButton rotate={0}></ArrowButton>
+      <ArrowButton rotate={0} onClick={nextShorts}></ArrowButton>
     </ShortsContainer>
   );
 };
@@ -243,7 +270,7 @@ export default Shorts;
 
 const ShortsContainer = styled.main`
   display: flex;
-  margin: 0 162px 30px 162px;
+  margin: 30px 162px 30px 162px;
   align-items: center;
   justify-content: center;
 `;
@@ -279,6 +306,7 @@ const StyledComment = styled.div`
 `;
 
 const ImageCover = styled.div`
+  position: relative;
   width: 360px;
   height: 640px;
   background-color: black;
@@ -298,7 +326,7 @@ const ImageCover = styled.div`
 
 const CommentCover = styled.div`
   flex-grow: 20;
-  width: 90%;
+  width: 100%;
   overflow: auto;
 `;
 
@@ -340,7 +368,35 @@ const ButtonContainer = styled.div`
   height: 50px;
 `;
 
-const LoadingMessage = styled.p`
-  width: 100px;
-  height: 100px;
+const ShortsButton = styled.button`
+  position: absolute;
+  bottom: 50px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50px;
+  height: 50px;
+  background-color: #efeafc;
+  border: 1px solid black;
+  border-radius: 50%;
+
+  @media (min-width: 1400px) {
+    display: none;
+  }
 `;
+
+const Modal = styled.div`
+  width: 360px;
+  height: 640px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1000;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.6);
+`;
+
+const CommentsButton = styled(BsFillChatLeftDotsFill)``;

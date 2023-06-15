@@ -104,8 +104,8 @@ const Navbar = () => {
               게시판
             </SubNavItem>
             <SubNavItem
-              active={checkActive(`${subNav.category}/페이지명`)}
-              onClick={() => handleSubNavClick("/페이지명")}
+              active={checkActive(`${subNav.category}/shorts`)}
+              onClick={() => handleSubNavClick("/shorts")}
             >
               쇼츠
             </SubNavItem>
