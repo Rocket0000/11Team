@@ -4,7 +4,6 @@ import axios from "axios";
 import Dropdown from "./../../components/common/Dropdown";
 import TableList from "./../../components/common/TableList";
 
-
 const MyPostsPage = () => {
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
@@ -73,7 +72,6 @@ const MyPostsPage = () => {
       return posts.filter((post: any) => post.category === parseInt(selectedCategory));
     }
   };
- 
 
   return (
     <div className="mh500">
@@ -89,13 +87,13 @@ const MyPostsPage = () => {
         <TableList
         show="my"
         data={filterPosts()}
-        total={total}
+        total={filterPosts().length}
         limit={limit}
         page={page}
         setPage={setPage}
       />
       ) : (
-        <p>게시글이 없습니다.</p>
+        <p>게시글이 없습니다. 글을 작성하고, 소식을 나누세요!</p>
       )}
     </div>
   );
