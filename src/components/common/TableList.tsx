@@ -1,10 +1,11 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import Pagination,{ PaginationProps } from "../../components/common/board/Pagination";
+import Pagination, {
+  PaginationProps,
+} from "../../components/common/board/Pagination";
 import PopularBadge from "./board/PopularBadge";
-
 
 interface Post {
   id: number;
@@ -15,7 +16,7 @@ interface Post {
   views: number;
 }
 
-interface TableProps extends PaginationProps{
+interface TableProps extends PaginationProps {
   show: "all" | "my";
   data: Post[];
   popularData?: Post[];
@@ -58,11 +59,20 @@ const TableCell = styled.td<{ width?: string }>`
   }
 `;
 
-const TableList: React.FC<TableProps> = ({ show, data, total, limit, page, setPage, popularData, category }) => {
+const TableList: React.FC<TableProps> = ({
+  show,
+  data,
+  total,
+  limit,
+  page,
+  setPage,
+  popularData,
+  category,
+}) => {
   const offset = (page - 1) * limit;
-  const myWriteLoction = window.location.href.split('/');
+  const myWriteLoction = window.location.href.split("/");
 
-  const pageName = myWriteLoction[3] + '/' + myWriteLoction[4];
+  const pageName = myWriteLoction[3] + "/" + myWriteLoction[4];
 
   const renderTableHeader = () => {
     if (show === "all") {
@@ -90,15 +100,21 @@ const TableList: React.FC<TableProps> = ({ show, data, total, limit, page, setPa
       );
     }
   };
-     
-  const renderTableRows = () => {
 
+  const renderTableRows = () => {
     return data.slice(offset, offset + limit).map((post, index) => (
       <TableRow key={post.id} even={index % 2 === 1}>
         <TableCell width="80px">{post.id}</TableCell>
         <TableCell>
-          <Link to={myWriteLoction[4] === 'MyWrite' ? `/MyWrite/notice/detail/${post.id}` :
-          `/${category}/notice/detail/${post.id}`}>{post.title}</Link>
+          <Link
+            to={
+              myWriteLoction[4] === "MyWrite"
+                ? `/MyWrite/notice/detail/${post.id}`
+                : `/${category}/notice/detail/${post.id}`
+            }
+          >
+            {post.title}
+          </Link>
         </TableCell>
         <TableCell width="100px">{post.created_at}</TableCell>
         {show === "all" && <TableCell width="100px">{post.nickname}</TableCell>}
@@ -111,47 +127,50 @@ const TableList: React.FC<TableProps> = ({ show, data, total, limit, page, setPa
     <>
       <TableWrapper>
         {renderTableHeader()}
-        {
-           show === 'all' && (
-            <tbody>
-              {
-                popularData?.map((item, index) => {
-                  return(
-                    <TableRow key={index}>
-                      <TableCell>{item.id}</TableCell>
-                      <TableCell>
-                        <div style={{display: 'flex', justifyContent:'flex-start', alignItems: 'center'}}>
-                          <PopularBadge></PopularBadge>
-                          <div>
-                            <Link to={`/${category}/notice/detail/${item.id}`}>{item.title}</Link>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.created_at}</TableCell>
-                      <TableCell>{item.nickname}</TableCell>
-                      <TableCell>{item.views}</TableCell>
-                    </TableRow>
-                  )
-                }) 
-              }
-            </tbody>
-          )
-        }
+        {show === "all" && (
+          <tbody>
+            {popularData?.map((item, index) => {
+              return (
+                <TableRow key={index}>
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                      }}
+                    >
+                      <PopularBadge></PopularBadge>
+                      <div>
+                        <Link to={`/${category}/notice/detail/${item.id}`}>
+                          {item.title}
+                        </Link>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{item.created_at}</TableCell>
+                  <TableCell>{item.nickname}</TableCell>
+                  <TableCell>{item.views}</TableCell>
+                </TableRow>
+              );
+            })}
+          </tbody>
+        )}
         <tbody>{renderTableRows()}</tbody>
         <tfoot>
           <tr>
-           <td colSpan={6} style={{border: 0}}>
-             <Pagination 
-               total={total}
-               limit={limit}
-               page={page}
-               setPage={setPage}
-             />
-           </td>
+            <td colSpan={6} style={{ border: 0 }}>
+              <Pagination
+                total={total}
+                limit={limit}
+                page={page}
+                setPage={setPage}
+              />
+            </td>
           </tr>
         </tfoot>
       </TableWrapper>
-
     </>
   );
 };
