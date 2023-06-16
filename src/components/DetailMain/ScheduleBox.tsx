@@ -119,7 +119,7 @@ const ScheduleContainer = styled.div`
   width: 390px;
   height: 540px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
 `;
 

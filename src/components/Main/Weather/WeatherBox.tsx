@@ -81,7 +81,7 @@ const WeatherBox = () => {
       <WeatherContainer>
         <WeatherWrap>
           {isLoading ? (
-            <p>날씨 정보를 불러오는 중입니다!</p>
+            <p>⛅날씨 정보를 불러오는 중입니다⛅</p>
           ) : error ? (
             <p>{error}</p>
           ) : (

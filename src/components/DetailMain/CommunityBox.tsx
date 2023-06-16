@@ -92,7 +92,7 @@ const CommunityContainer = styled.div`
   width: 1190px;
   height: 550px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
   margin-top: 20px;
 `;

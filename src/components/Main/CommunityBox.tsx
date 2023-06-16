@@ -28,7 +28,9 @@ const TableHeader = () => {
 const LinkTitle = ({ sportsName }: any) => {
   return (
     <Link to={`/${sportsName.eng}/notice`}>
-      {sportsName.kr} {sportsName.kr == "전체" ? `글` : `게시판`}
+      <div className={styles.linkTitle}>
+        {sportsName.kr} {sportsName.kr == "전체" ? `글` : `게시판`}
+      </div>
     </Link>
   );
 };
@@ -125,7 +127,7 @@ const CommunityContainer = styled.div`
   width: 1190px;
   height: 625px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
   margin-top: 20px;
 `;
@@ -164,6 +166,7 @@ const BoardTitle = styled.div`
   height: 35px;
   font-weight: 400;
   font-size: 18px;
+  color: #5546b7;
 `;
 
 const Table = styled.table`

@@ -112,7 +112,7 @@ const RankContainer = styled.div`
   width: 400px;
   height: 550px;
   background: #ffffff;
-  border: 2.5px solid #d9d9d9;
+  border: 2.5px solid #c5b5f1;
   border-radius: 20px;
   flex-direction: column;
   margin-top: 20px;
