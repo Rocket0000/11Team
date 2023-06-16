@@ -29,6 +29,7 @@ const ProfilePopper = (props: ProfilePopperProps) => {
       anchorEl={anchorEl}
       placement="bottom-end"
       transition
+      style={{ zIndex: 99 }}
     >
       {({ TransitionProps }) => (
         <ClickAwayListener onClickAway={onClose}>
