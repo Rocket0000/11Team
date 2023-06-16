@@ -20,6 +20,8 @@ interface CommentProps {
   localSaveUserId: number;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const Comment: React.FC<CommentProps> = ({ data, localSaveUserId }) => {
   const token = localStorage.getItem("accessToken");
 
@@ -38,7 +40,7 @@ const Comment: React.FC<CommentProps> = ({ data, localSaveUserId }) => {
             if (item.user_id === localSaveUserId) {
               console.log("삭제", commentId);
               return axios
-                .delete(`http://localhost:5500/api/v1/comment/${commentId}`, {
+                .delete(`${apiUrl}comment/${commentId}`, {
                   headers: {
                     Authorization: `Bearer ${token}`,
                   },
@@ -63,7 +65,7 @@ const Comment: React.FC<CommentProps> = ({ data, localSaveUserId }) => {
           const reportComment = (comment_Id: number) => {
             axios
               .put(
-                `http://localhost:5500/api/v1/comment/report/${comment_Id}`,
+                `${apiUrl}comment/report/${comment_Id}`,
                 {},
                 {
                   headers: {

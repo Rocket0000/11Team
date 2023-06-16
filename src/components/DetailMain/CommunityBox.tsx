@@ -7,6 +7,8 @@ import { getCategoryName } from "../common/Dropdown";
 import TableList from "../common/TableList";
 import { Link } from "react-router-dom";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const TableHeader = () => {
   return (
     <HeaderTr>
@@ -54,9 +56,7 @@ const CommunityBox = ({ category }: { category: number }) => {
   useEffect(() => {
     const getBoardData = async (category?: any) => {
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/post/category/${category}`
-        );
+        const res = await axios.get(`${apiUrl}post/category/${category}`);
         const cutData = res.data.data.slice(0, 9);
         setBoardData(cutData);
       } catch (error) {

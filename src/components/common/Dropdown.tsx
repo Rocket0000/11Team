@@ -18,6 +18,8 @@ interface Props {
   selectCategory?: number;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export const getCategoryName = (category: number) => {
   const sportsName =
     category == 0
@@ -45,7 +47,7 @@ const Dropdown: React.FC<Props> = ({
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const res = await axios.get("http://localhost:5500/api/v1/category");
+        const res = await axios.get(`${apiUrl}category`);
         const categoryData = res.data.data;
 
         if (allCategory) {

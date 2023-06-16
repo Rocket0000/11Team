@@ -34,6 +34,8 @@ interface Match {
   season: string;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 // @ts-expect-error
 const MatchContainer = ({ categoryData }) => {
   return (
@@ -73,9 +75,7 @@ const ScheduleBox = ({ category }: { category: number }) => {
     const getSceduleData = async (date: any) => {
       const selectdate = format(date, "yyyy-MM-dd");
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/schedule/day/${selectdate}`
-        );
+        const res = await axios.get(`${apiUrl}schedule/day/${selectdate}`);
         const newData = res.data.data.filter(
           (data: { category: number }) => data.category === category
         );

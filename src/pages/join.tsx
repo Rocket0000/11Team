@@ -9,6 +9,8 @@ import Button from "./../components/common/Button/Button";
 import Input from "./../components/common/Input";
 import ProfileImg from "./mypage/ProfileImg";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const JoinPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +24,7 @@ const JoinPage: React.FC = () => {
 
   const registerUser = () => {
     axios
-      .post("http://localhost:5500/api/v1/auth/register", {
+      .post(`${apiUrl}auth/register`, {
         email,
         password,
         interest,

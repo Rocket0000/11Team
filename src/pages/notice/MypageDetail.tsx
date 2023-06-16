@@ -13,67 +13,65 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
-const MypageDetail = () =>{
-  const size = Array(8).fill('11%');
-  const getPostId = window.location.href.split('/');
+const MypageDetail = () => {
+  const size = Array(8).fill("11%");
+  const getPostId = window.location.href.split("/");
 
-  const [ notice, setNotice ] = useState<any>({});
+  const [notice, setNotice] = useState<any>({});
 
   const navigtion = useNavigate();
 
-  
   useEffect(() => {
-      axios.get(`http://localhost:5500/api/v1/post/${getPostId[6]}`)
-        .then((res) => {
-          setNotice(res.data.data);
-          console.log('res:::',res);
-        })
-        .catch((err) => {
-          console.error('err:::', err);
-        })
-  },[]);
+    axios
+      .get(`${apiUrl}post/${getPostId[6]}`)
+      .then((res) => {
+        setNotice(res.data.data);
+        console.log("res:::", res);
+      })
+      .catch((err) => {
+        console.error("err:::", err);
+      });
+  }, []);
 
-return(
-    <div style={{padding: '0 162px'}}>
+  return (
+    <div style={{ padding: "0 162px" }}>
       <BoardBg width="100%" margin="24px 0">
         <TableTag>
-          <ColGroupTag 
-            trCount={size}
-            widthSize={size}
-          />
+          <ColGroupTag trCount={size} widthSize={size} />
           <tbody>
-            <TrTag 
+            <TrTag
               colSpan={7}
               thTitle="번호,제목"
               rowType="colSpanType"
               tdContent={notice}
             />
-            <TrTag 
+            <TrTag
               thTitle={"카테고리,작성일,작성자,조회수"}
               rowType="default"
               tdContent={notice}
             />
           </tbody>
-          </TableTag>
-          <SectionTag padding="20px" height="auto">
-            <div data-color-mode="light">
-              <MDEditor.Markdown source={notice.content} />
-            </div>
-          </SectionTag>
+        </TableTag>
+        <SectionTag padding="20px" height="auto">
+          <div data-color-mode="light">
+            <MDEditor.Markdown source={notice.content} />
+          </div>
+        </SectionTag>
       </BoardBg>
       <SectionTag margin="37px 0 47px" display="flex">
-          <div style={{width: '168px'}}>
-            <Button
-              purpose="base"
-              content="글 수정하기"
-              disabled={false}
-              onClick={() => navigtion(`/myWrite/notice/modify/${notice.id}`)}
-            />
-          </div>
+        <div style={{ width: "168px" }}>
+          <Button
+            purpose="base"
+            content="글 수정하기"
+            disabled={false}
+            onClick={() => navigtion(`/myWrite/notice/modify/${notice.id}`)}
+          />
+        </div>
       </SectionTag>
     </div>
-  )
-}
+  );
+};
 
 export default MypageDetail;

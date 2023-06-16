@@ -185,9 +185,7 @@ const TabMenu: React.FC = () => {
       <TabContentWrapper>
         {activeTab === 0 && (
           <Tab label="Tab 1">
-            <p>작성글 보기</p>
-            {/* <TableList show="all" data={dummyPosts} />
-            <TableList show="my" data={dummyPosts} /> */}
+            <MyPostsPage />
           </Tab>
         )}
         {activeTab === 1 && (

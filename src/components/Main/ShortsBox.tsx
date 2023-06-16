@@ -5,6 +5,8 @@ import axios from "axios";
 import styles from "../../styles/main.module.scss";
 import { Link } from "react-router-dom";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 // @ts-expect-error
 const VideoContainer = ({ data }) => {
   return (
@@ -29,7 +31,7 @@ const ShortsBox = () => {
   useEffect(() => {
     const getShortsData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5500/api/v1/shorts`);
+        const res = await axios.get(`${apiUrl}shorts`);
         const cutData = res.data.data.slice(0, 4);
         setData(cutData);
       } catch (error) {
