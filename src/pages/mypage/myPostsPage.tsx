@@ -4,6 +4,8 @@ import axios from "axios";
 import Dropdown from "./../../components/common/Dropdown";
 import TableList from "./../../components/common/TableList";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const MyPostsPage = () => {
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
@@ -40,7 +42,7 @@ const MyPostsPage = () => {
 
   const fetchUserPosts = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/v1/user/post`, {
+      const response = await axios.get(`${apiUrl}user/post`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,14 +71,20 @@ const MyPostsPage = () => {
     if (selectedCategory === null) {
       return posts;
     } else {
-      return posts.filter((post: any) => post.category === parseInt(selectedCategory));
+      return posts.filter(
+        (post: any) => post.category === parseInt(selectedCategory)
+      );
     }
   };
 
   return (
     <div className="mh500">
-      <div style={{display:"flex", alignItems:"center", marginBottom:"20px"}}>
-        <h2 className="pageTitle" style={{marginRight:"auto"}}>작성글 보기</h2>
+      <div
+        style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
+      >
+        <h2 className="pageTitle" style={{ marginRight: "auto" }}>
+          작성글 보기
+        </h2>
         <Dropdown
           allCategory={true}
           purpose="small"
@@ -85,13 +93,13 @@ const MyPostsPage = () => {
       </div>
       {posts.length > 0 ? (
         <TableList
-        show="my"
-        data={filterPosts()}
-        total={filterPosts().length}
-        limit={limit}
-        page={page}
-        setPage={setPage}
-      />
+          show="my"
+          data={filterPosts()}
+          total={filterPosts().length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
       ) : (
         <p>게시글이 없습니다. 글을 작성하고, 소식을 나누세요!</p>
       )}

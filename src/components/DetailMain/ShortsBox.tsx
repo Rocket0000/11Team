@@ -17,6 +17,8 @@ interface Data {
   created_at: string;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 // @ts-expect-error
 const VideoContainer = ({ data, category }) => {
   return (
@@ -43,9 +45,7 @@ const ShortsBox = ({ category }: { category: number }) => {
   useEffect(() => {
     const getShortsData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/shorts?category=${category}`
-        );
+        const res = await axios.get(`${apiUrl}shorts?category=${category}`);
         const cutData = res.data.data.slice(0, 4);
         setData(cutData);
       } catch (error) {

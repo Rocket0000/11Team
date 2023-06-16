@@ -34,6 +34,8 @@ interface Match {
   season: string;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export const getCompareTime = (date: string, time: string): string => {
   const todayDate = format(new Date(), "yyyy-MM-dd,HH:mm:ss");
 
@@ -93,9 +95,7 @@ const ScheduleBox = () => {
   const getSceduleData = async (date: any) => {
     const selectdate = format(date, "yyyy-MM-dd");
     try {
-      const res = await axios.get(
-        `http://localhost:5500/api/v1/schedule/day/${selectdate}`
-      );
+      const res = await axios.get(`${apiUrl}schedule/day/${selectdate}`);
       setDateData(res.data.data);
     } catch (error) {
       console.error("경기순위 불러오는거 실패함", error);

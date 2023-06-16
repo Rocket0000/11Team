@@ -37,6 +37,8 @@ const CATEGORY: { [key: string]: number } = {
   esport: 2,
 };
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const SchedulePage = () => {
   const { sports } = useParams() as { sports: string };
 
@@ -64,9 +66,7 @@ const SchedulePage = () => {
   useEffect(() => {
     const getTeamList = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/team/${CATEGORY[sports]}`
-        );
+        const res = await axios.get(`${apiUrl}team/${CATEGORY[sports]}`);
         setTeamList(res.data.data);
       } catch (err) {
         console.log(err);
@@ -82,14 +82,11 @@ const SchedulePage = () => {
     // 날짜별 일정 가져오기
     const getScheduleData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/schedule/day/${dateString}`,
-          {
-            params: {
-              category: CATEGORY[sports],
-            },
-          }
-        );
+        const res = await axios.get(`${apiUrl}schedule/day/${dateString}`, {
+          params: {
+            category: CATEGORY[sports],
+          },
+        });
 
         setScheduleData(res.data.data);
       } catch (err) {
@@ -101,7 +98,7 @@ const SchedulePage = () => {
     const getScheduleDataByTeamId = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5500/api/v1/schedule/${CATEGORY[sports]}/team`,
+          `${apiUrl}schedule/${CATEGORY[sports]}/team`,
           {
             params: {
               teamId: selectedTeamId,

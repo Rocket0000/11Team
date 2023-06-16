@@ -16,6 +16,8 @@ interface Rank {
   winRate?: number;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const RankBox = ({ category }: { category: number }) => {
   const HEADER_LIST = ["순위", "팀명", "경기", "승", "패", "무", "승률"];
   const [data, setData] = useState<Rank[]>([]);
@@ -51,9 +53,7 @@ const RankBox = ({ category }: { category: number }) => {
           ? `2023-KBO`
           : `2023-LCK-Spring`;
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/rank/${category}/${season}`
-        );
+        const res = await axios.get(`${apiUrl}rank/${category}/${season}`);
         const targetData = res.data.data;
         const sortData = getTeamsWithWinRate(targetData);
         const data = sortData.slice(0, 12);

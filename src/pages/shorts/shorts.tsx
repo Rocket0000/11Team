@@ -32,6 +32,8 @@ interface ShortsPropsType {
   category?: number | null;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 // 서버에 데이터를 받아올 때 이미 존재하는 id이면 다시 받아오도록
 const Shorts: React.FC<ShortsPropsType> = ({ id, category }) => {
   const localSaveUserId = localStorage.getItem("userId");
@@ -50,7 +52,7 @@ const Shorts: React.FC<ShortsPropsType> = ({ id, category }) => {
     category?: number | undefined | null
   ) => {
     try {
-      let url = `http://localhost:5500/api/v1/shorts/${
+      let url = `${apiUrl}shorts/${
         id !== undefined ? "detail" : "category/detail"
       }`;
 
@@ -77,9 +79,7 @@ const Shorts: React.FC<ShortsPropsType> = ({ id, category }) => {
   const getShorts = async (shorts_id?: number) => {
     try {
       console.log("shorts_id", shorts_id);
-      const response = await axios.get(
-        `http://localhost:5500/api/v1/shorts/detail/${shorts_id}`
-      );
+      const response = await axios.get(`${apiUrl}shorts/detail/${shorts_id}`);
       const shorts = response.data.detail;
       console.log(shorts);
 
@@ -92,14 +92,11 @@ const Shorts: React.FC<ShortsPropsType> = ({ id, category }) => {
   // shortsId에 해당하는 댓글을 가져오는 함수
   const getComments = async (shortsId: number) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5500/api/v1/comment/list/${shortsId}`,
-        {
-          params: {
-            contents_category: 0,
-          },
-        }
-      );
+      const response = await axios.get(`${apiUrl}comment/list/${shortsId}`, {
+        params: {
+          contents_category: 0,
+        },
+      });
       const comments = response.data.data;
       setComments(comments);
     } catch (error) {
@@ -163,11 +160,7 @@ const Shorts: React.FC<ShortsPropsType> = ({ id, category }) => {
         },
       };
 
-      await axios.post(
-        `http://localhost:5500/api/v1/comment/`,
-        requestBody,
-        config
-      );
+      await axios.post(`${apiUrl}comment/`, requestBody, config);
 
       setInput("");
 

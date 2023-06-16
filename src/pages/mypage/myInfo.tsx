@@ -6,6 +6,8 @@ import Button from "./../../components/common/Button/Button";
 import ProfileImg from "./ProfileImg";
 import "./../../styles/mypage.css";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const MyInfo = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
@@ -61,15 +63,11 @@ const MyInfo = () => {
         img: userInfo.img,
       };
 
-      const response = await axios.put(
-        `${BASE_URL}/api/v1/user`,
-        updatedUserInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.put(`${apiUrl}user`, updatedUserInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log("수정 성공", response.data);
       window.location.reload();

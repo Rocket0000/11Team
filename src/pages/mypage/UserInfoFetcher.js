@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const UserInfoFetcher = ({ onSuccess, onError }) => {
   const BASE_URL = "http://localhost:5500";
@@ -32,7 +34,7 @@ const UserInfoFetcher = ({ onSuccess, onError }) => {
     };
 
     axios
-      .get(`${BASE_URL}/api/v1/user`, {
+      .get(`${apiUrl}user`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "x-refresh-token": refreshToken,
@@ -95,7 +97,7 @@ export const handleWithdraw = () => {
   }
 
   axios
-    .delete(`${BASE_URL}/api/v1/user`, {
+    .delete(`${apiUrl}user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

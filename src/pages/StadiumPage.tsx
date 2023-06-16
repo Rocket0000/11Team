@@ -9,6 +9,8 @@ import { Schedule } from "./SchedulePage";
 
 const CATEGORY = ["전체", "축구", "야구", "LOL"];
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const StadiumPage = () => {
   const location = useLocation();
   const [scheduleData, setScheduleData] = useState<Schedule[]>([]);
@@ -31,10 +33,7 @@ const StadiumPage = () => {
     const getScheduleData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5500/api/v1/schedule/day/${format(
-            new Date(),
-            "yyyy-MM-dd"
-          )}`
+          `${apiUrl}schedule/day/${format(new Date(), "yyyy-MM-dd")}`
         );
         setScheduleData(res.data.data);
         setFilteredScheduleData(res.data.data);

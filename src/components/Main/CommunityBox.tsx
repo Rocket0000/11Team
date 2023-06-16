@@ -13,6 +13,8 @@ interface Data {
   category: number;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const TableHeader = () => {
   return (
     <HeaderTr>
@@ -40,9 +42,7 @@ const BoardBox = ({ category }) => {
   useEffect(() => {
     const getBoardData = async (category?: any) => {
       try {
-        const res = await axios.get(
-          `http://localhost:5500/api/v1/post/main?category=${category}`
-        );
+        const res = await axios.get(`${apiUrl}post/main?category=${category}`);
         setBoardData(res.data.data);
       } catch (error) {
         console.error("게시판 불러오는거 실패함", error);

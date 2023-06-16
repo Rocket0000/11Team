@@ -24,6 +24,8 @@ export let AccountBox = styled.div<AccountBox>`
   position: relative;
 `;
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -39,7 +41,7 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = () => {
     axios
-      .post("http://localhost:5500/api/v1/auth/logIn", { email, password })
+      .post(`${apiUrl}auth/logIn`, { email, password })
       .then((response) => {
         // 로그인 성공
         const accessToken = response.data.data.userToken.accessToken;
@@ -53,7 +55,7 @@ const LoginPage: React.FC = () => {
           console.log("토큰 값이 없습니다.");
         }
         console.log("로그인 성공");
-        alert('로그인 성공! 환영합니다!');
+        alert("로그인 성공! 환영합니다!");
         navigate("/");
         window.location.reload();
       })
@@ -81,7 +83,13 @@ const LoginPage: React.FC = () => {
                 onChange={handlePasswordChange}
               />
             </article>
-            <div style={{ width: "100%", height: "40px", margin: "0 auto 15px auto" }}>
+            <div
+              style={{
+                width: "100%",
+                height: "40px",
+                margin: "0 auto 15px auto",
+              }}
+            >
               <Button
                 disabled={false}
                 purpose="base"
