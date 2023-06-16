@@ -9,6 +9,7 @@ import UserInfoFetcher from "./UserInfoFetcher";
 import MyInfo from "./myInfo";
 
 import MyPostsPage from "./myPostsPage";
+import MyShorts from "./MyShorts";
 
 const MyWrite = () => {
   const [nickname, setNickname] = useState("");
@@ -29,7 +30,7 @@ const MyWrite = () => {
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
-  
+
     if (confirmLogout) {
       localStorage.removeItem("accessToken");
       alert("안녕히가세요!");
@@ -39,7 +40,6 @@ const MyWrite = () => {
       console.log("로그아웃 취소");
     }
   };
-  
 
   useEffect(() => {
     const imgId = localStorage.getItem("profileImgId");
@@ -190,7 +190,7 @@ const TabMenu: React.FC = () => {
         )}
         {activeTab === 1 && (
           <Tab label="Tab 2">
-            <p>내 동영상</p>
+            <MyShorts></MyShorts>
           </Tab>
         )}
         {activeTab === 2 && (
