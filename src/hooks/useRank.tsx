@@ -16,7 +16,7 @@ interface Team {
 }
 
 const useRank = () => {
-    const url = "http://localhost:5500/api/v1";
+    const apiUrl = process.env.REACT_APP_API_URL;
     const location = useLocation();
 
     const path = location.pathname.split("/")[1];
@@ -32,12 +32,12 @@ const useRank = () => {
     useEffect(() => {
         const fetchSeasonData = async () => {
             try {
-                const res = await axios.get(`${url}/rank/${category}`);
+                const res = await axios.get(`${apiUrl}rank/${category}`);
                 const seasons = res.data.data.map((item: { season: string }) => item.season);
                 setSeasons(seasons)
                 setDefaultSeason(res.data.data[0].season);
 
-                const rankRes = await axios.get(`${url}/rank/${category}/${res.data.data[0].season}`);
+                const rankRes = await axios.get(`${apiUrl}rank/${category}/${res.data.data[0].season}`);
                 setData(rankRes.data.data);
 
             } catch (err) {
@@ -51,7 +51,7 @@ const useRank = () => {
     // 모달창에서 시즌을 선택하면 그 시즌에 해당하는 순위데이터 다시 가져오기
     const reFetch = async (selectedSeason: string) => {
         try {
-            const res = await axios.get(`${url}/rank/${category}/${selectedSeason}`);
+            const res = await axios.get(`${apiUrl}rank/${category}/${selectedSeason}`);
             setData(res.data.data);
         } catch (err) {
             console.error(err)
