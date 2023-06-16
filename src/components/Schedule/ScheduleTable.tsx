@@ -123,6 +123,7 @@ export default ScheduleTable;
 const Table = styled.table`
   margin-top: 25px;
   width: 100%;
+  table-layout: fixed;
 `;
 
 const TableHead = styled.thead`
@@ -131,7 +132,6 @@ const TableHead = styled.thead`
 
 const TableHeader = styled.th<{ isToday?: boolean }>`
   box-sizing: border-box;
-  padding: 10px;
   border-top: 1px solid #f3f3f3;
   vertical-align: middle;
   text-align: center;
@@ -150,6 +150,7 @@ const TableHeader = styled.th<{ isToday?: boolean }>`
 
   &.date {
     border-right: 1px solid #f3f3f3;
+    padding: 10px;
   }
   span {
     font-weight: bold;
@@ -213,17 +214,18 @@ const TableCell = styled.td`
 `;
 
 const DateColumn = styled.col`
-  width: 15%;
+  width: 10%;
+  min-width: 65px;
 `;
 
 const TimeColumn = styled.col`
-  width: 5%;
+  width: 10%;
 `;
 
 const LocationColumn = styled.col`
-  width: 15%;
+  width: 10%;
 `;
 
 const GameColumn = styled.col`
-  width: 65%;
+  width: 60%;
 `;

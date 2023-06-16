@@ -29,6 +29,7 @@ const ProfilePopper = (props: ProfilePopperProps) => {
       anchorEl={anchorEl}
       placement="bottom-end"
       transition
+      style={{ zIndex: 99 }}
     >
       {({ TransitionProps }) => (
         <ClickAwayListener onClickAway={onClose}>
@@ -65,7 +66,7 @@ export default ProfilePopper;
 
 const ProfilePopperContainer = styled.div`
   width: 340px;
-  height: 250px;
+  height: 240px;
   box-sizing: border-box;
   background-color: white;
   border-radius: 10px;
@@ -114,15 +115,17 @@ const TextContainer = styled.div`
 `;
 
 const PopperButton = styled(Button)`
-  width: 100%;
-  height: 36px;
-  border-radius: 20px;
-  background-color: #5546b7;
-  cursor: pointer;
-  font-size: 16px;
-  color: #ffffff;
-  margin-top: 30px;
-  &:hover {
-    background-color: #312694;
+  &&& {
+    width: 100%;
+    height: 36px;
+    border-radius: 20px;
+    background-color: #5546b7;
+    cursor: pointer;
+    font-size: 16px;
+    color: #ffffff;
+    margin-top: 30px;
+    &:hover {
+      background-color: #312694;
+    }
   }
 `;
