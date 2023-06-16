@@ -53,7 +53,7 @@ const Container = styled.div`
 `;
 
 const Team = styled.div`
-  width: 120px;
+  width: 140px;
   display: flex;
   align-items: center;
 
@@ -70,7 +70,8 @@ const GameStatus = styled.div`
   font-size: 12px;
   margin: 0 5px;
   color: #7c7b7b;
-  width: 45px;
+  width: 50px;
+  white-space: nowrap;
 
   &.vs {
     font-size: 16px;
