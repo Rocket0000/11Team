@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0e9bde1e.css",
+    "main.js": "/static/js/main.deb70861.js",
+    "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/index.html",
+    "static/media/DoubleNext.svg": "/static/media/DoubleNext.ff97392f1d5a3e618bcd38312e4304b5.svg",
+    "static/media/DoublePrevious.svg": "/static/media/DoublePrevious.e181a30fee780dc167bf4a20b51b3ae2.svg",
+    "static/media/Next.svg": "/static/media/Next.781e6219976e60496c5e8f3d90ca9f68.svg",
+    "static/media/Previous.svg": "/static/media/Previous.5fd717a1c61683ec37d6cd4cd546e78c.svg",
+    "main.0e9bde1e.css.map": "/static/css/main.0e9bde1e.css.map",
+    "main.deb70861.js.map": "/static/js/main.deb70861.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0e9bde1e.css",
+    "static/js/main.deb70861.js"
+  ]
+}
